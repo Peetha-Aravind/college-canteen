@@ -3,97 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Products - SRKR Canteen</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Products - SRKR Canteen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; background-color: #fafafa; }
-        .card-shadow { box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05); }
+        /* Exact same styling base as Categories */
+        :root {
+            --accent: #f97316; --accent-dark: #ea580c; --bg: #f8fafc; --surface: #ffffff;
+            --text: #0f172a; --text-light: #64748b; --border: #e2e8f0; --danger: #ef4444; --success: #10b981;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1); --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; }
+        
+        nav { background: var(--surface); padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
+        .back-link { text-decoration: none; font-weight: 600; color: var(--text-light); transition: 0.2s; }
+        .back-link:hover { color: var(--text); }
+        nav h1 { font-size: 1.25rem; font-weight: 700; color: var(--accent-dark); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+        .header-actions h2 { font-size: 1.5rem; }
+        
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; text-decoration: none; }
+        .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+        .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; text-decoration: none; text-align: center; }
+        .btn-outline:hover { background: var(--bg); }
+        .btn-danger { background: white; color: var(--danger); border: 1px solid #fecaca; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-danger:hover { background: #fef2f2; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--surface); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: transform 0.3s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .card img { width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid var(--border); }
+        .card-body { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+        .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .card-desc { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem; line-height: 1.4; }
+        
+        .type-pills { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1rem; }
+        .pill { background: var(--bg); color: var(--text); font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid var(--border); }
+
+        .status-row { display: flex; justify-content: space-between; align-items: center; background: var(--bg); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; margin-top: auto; }
+        .status-row span { font-size: 0.85rem; font-weight: 600; color: var(--text-light); }
+        .toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid var(--border); }
     </style>
 </head>
-<body class="text-gray-800 min-h-screen">
-    
-    <nav class="border-b border-gray-200 px-6 py-4 flex justify-between items-center bg-white shadow-sm sticky top-0 z-10">
-        <div class="flex items-center space-x-4">
-            <a href="manage-categories.html" class="text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors">← Back to Categories</a>
-        </div>
-        <span class="text-xl font-bold tracking-tight text-gray-900">SRKR Canteen</span>
-    </nav>
+<body>
 
-    <main class="max-w-7xl mx-auto px-6 py-8">
-        <div class="flex justify-between items-center mb-8 border-b border-gray-200 pb-4">
-            <h2 id="page-title" class="text-2xl font-bold text-gray-900">Products</h2>
-            <a id="add-product-btn" href="#" class="bg-gray-900 hover:bg-black text-white font-medium py-2.5 px-5 rounded-lg shadow-sm transition-colors">
-                Add New Product
-            </a>
-        </div>
-        
-        <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-    </main>
+<nav>
+    <a href="manage-categories.html" class="back-link">← Back</a>
+    <h1>SRKR Canteen</h1>
+</nav>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, query, where, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<div class="container">
+    <div class="header-actions">
+        <h2 id="page-title">Products</h2>
+        <a href="#" id="add-product-btn" class="btn-primary">+ Add Product</a>
+    </div>
+    <div id="products-container" class="grid"></div>
+</div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
-            authDomain: "srkr-canteen.firebaseapp.com",
-            projectId: "srkr-canteen",
-            storageBucket: "srkr-canteen.firebasestorage.app"
-        };
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, where, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const app = initializeApp({
+        apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
+        authDomain: "srkr-canteen.firebaseapp.com",
+        projectId: "srkr-canteen",
+        storageBucket: "srkr-canteen.firebasestorage.app"
+    });
+    const db = getFirestore(app);
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const categoryId = urlParams.get('categoryId');
-        const categoryName = urlParams.get('categoryName');
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryId = urlParams.get('categoryId');
+    const categoryName = urlParams.get('categoryName');
 
-        document.getElementById('page-title').innerText = `${categoryName || 'Category'} - Products`;
-        document.getElementById('add-product-btn').href = `product.html?categoryId=${categoryId}`;
+    document.getElementById('page-title').innerText = `${categoryName || 'Category'} Products`;
+    document.getElementById('add-product-btn').href = `product.html?categoryId=${categoryId}`;
 
-        const q = query(collection(db, "products"), where("categoryId", "==", categoryId));
+    const q = query(collection(db, "products"), where("categoryId", "==", categoryId));
 
-        onSnapshot(q, (snapshot) => {
-            const container = document.getElementById('products-container');
-            container.innerHTML = '';
+    onSnapshot(q, (snapshot) => {
+        const container = document.getElementById('products-container');
+        container.innerHTML = '';
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data(); const id = docSnap.id;
+            const isChecked = data.active !== false ? 'checked' : '';
+            const typesHtml = data.types ? data.types.split(',').map(t => `<span class="pill">${t.trim()}</span>`).join('') : '';
 
-            snapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                const id = docSnap.id;
-                const isChecked = data.active !== false ? 'checked' : '';
-                
-                const typesHtml = data.types ? data.types.split(',').map(t => `<span class="bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded-md">${t.trim()}</span>`).join(' ') : '';
-
-                container.innerHTML += `
-                    <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden flex flex-col card-shadow">
-                        <img src="${data.image}" alt="${data.name}" class="w-full h-40 object-cover bg-gray-50 border-b border-gray-50">
-                        <div class="p-5 flex flex-col flex-1">
-                            <h3 class="font-bold text-lg text-gray-900 mb-1">${data.name}</h3>
-                            <p class="text-sm text-gray-500 mb-3 line-clamp-2">${data.description}</p>
-                            
-                            <div class="flex flex-wrap gap-1 mb-4">
-                                ${typesHtml}
-                            </div>
-                            
-                            <div class="flex items-center justify-between mb-5 mt-auto bg-gray-50 p-3 rounded-lg">
-                                <span class="text-sm font-semibold text-gray-600">Available</span>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" ${isChecked} onchange="window.toggleProdStatus('${id}', this.checked)" class="sr-only peer">
-                                    <div class="w-10 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500"></div>
-                                </label>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-3 border-t border-gray-100 pt-4">
-                                <a href="product.html?categoryId=${categoryId}&productId=${id}" class="bg-gray-50 text-center py-2 rounded-xl text-sm font-semibold text-gray-800 border border-gray-200 hover:bg-gray-100 transition-colors">Edit</a>
-                                <button onclick="window.deleteProd('${id}')" class="bg-white border border-red-200 text-red-600 py-2 rounded-xl text-sm font-semibold hover:bg-red-50 transition-colors">Delete</button>
-                            </div>
+            container.innerHTML += `
+                <div class="card">
+                    <img src="${data.image}" alt="${data.name}">
+                    <div class="card-body">
+                        <div class="card-title">${data.name}</div>
+                        <div class="card-desc">${data.description}</div>
+                        <div class="type-pills">${typesHtml}</div>
+                        
+                        <div class="status-row">
+                            <span>Available</span>
+                            <label class="toggle">
+                                <input type="checkbox" ${isChecked} onchange="window.toggleStatus('${id}', this.checked)">
+                                <span class="slider"></span>
+                            </label>
                         </div>
-                    </div>`;
-            });
+                        <div class="card-actions">
+                            <a href="product.html?categoryId=${categoryId}&productId=${id}" class="btn-outline">Edit</a>
+                            <button onclick="window.deleteItem('${id}')" class="btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </div>`;
         });
+    });
 
-        window.toggleProdStatus = async (id, status) => updateDoc(doc(db, "products", id), { active: status });
-        window.deleteProd = async (id) => confirm("Are you sure you want to delete this product?") && deleteDoc(doc(db, "products", id));
-    </script>
+    window.toggleStatus = (id, status) => updateDoc(doc(db, "products", id), { active: status });
+    window.deleteItem = (id) => confirm("Delete this product?") && deleteDoc(doc(db, "products", id));
+</script>
 </body>
 </html>
