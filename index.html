@@ -3,82 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SRKR Canteen</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Admin Login - SRKR Canteen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: system-ui, -apple-system, sans-serif; 
-            background-color: #fafafa; 
+        :root {
+            --accent: #f97316; /* Vibrant Orange */
+            --accent-dark: #ea580c;
+            --accent-light: #fdba74;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow-card: 0 20px 40px -10px rgba(249, 115, 22, 0.15), 0 4px 10px rgba(0,0,0,0.05);
         }
-        
-        /* Custom clean shadow and border for the login card */
-        .glass-card {
-            background: #ffffff;
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
-            border: 1px solid #f0f0f0;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 2rem 1.25rem; }
+
+        .page-container {
+            width: 100%; max-width: 1000px; display: flex; flex-direction: column;
+            background: var(--surface); border-radius: 24px; box-shadow: var(--shadow-card);
+            overflow: hidden; border: 1px solid var(--border);
+            animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both;
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .info-panel { display: none; }
+        .form-panel { flex: 1; padding: 3rem 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+        .form-content { width: 100%; max-width: 360px; text-align: center; }
+        .form-header h2 { font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+        .form-header p { color: var(--text-light); font-size: 0.95rem; margin-bottom: 2.5rem; }
+
+        .btn-google {
+            width: 100%; padding: 1rem; font-size: 1rem; font-weight: 600;
+            color: var(--surface); background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            border: none; border-radius: 12px; cursor: pointer;
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.25);
+            transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+        }
+        .btn-google:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(249, 115, 22, 0.35); }
+        .btn-google svg { width: 22px; height: 22px; background: white; border-radius: 50%; padding: 2px; }
+
+        @media (min-width: 900px) {
+            .page-container { flex-direction: row; min-height: 600px; }
+            .info-panel {
+                display: flex; flex-direction: column; justify-content: center; align-items: center;
+                flex-basis: 45%; background: linear-gradient(150deg, #fff7ed 0%, #ffedd5 100%);
+                padding: 3rem; text-align: center; border-right: 1px solid var(--border);
+            }
+            .info-icon {
+                width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+                border-radius: 24px; display: flex; align-items: center; justify-content: center;
+                font-size: 2.5rem; color: white; margin-bottom: 1.5rem;
+                box-shadow: 0 12px 30px rgba(249, 115, 22, 0.3); animation: float 3s ease-in-out infinite;
+            }
+            @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+            .info-panel h1 { font-size: 1.75rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.5rem; }
+            .info-panel p { color: var(--accent-dark); font-weight: 500; }
         }
     </style>
 </head>
-<body class="text-gray-800 min-h-screen flex flex-col">
-    
-    <nav class="border-b border-gray-100 bg-white px-8 py-5 flex justify-between items-center w-full sticky top-0">
-        <span class="text-2xl font-black tracking-tight text-gray-900">SRKR Canteen</span>
-        <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">Admin Portal</span>
-    </nav>
+<body>
 
-    <main class="flex-grow flex items-center justify-center px-4">
-        <div class="glass-card w-full max-w-md rounded-2xl p-10 text-center transition-all duration-500 hover:shadow-2xl">
-            
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Welcome</h2>
-            <p class="text-gray-500 mb-10 text-sm font-medium">Sign in to manage the canteen system.</p>
-            
-            <button id="admin-login-btn" class="w-full bg-gray-900 text-white py-3.5 px-4 rounded-xl font-semibold tracking-wide transition-all duration-300 transform hover:-translate-y-1 hover:bg-black hover:shadow-xl hover:shadow-gray-300/50">
+<div class="page-container">
+    <div class="info-panel">
+        <div class="info-icon">🍔</div>
+        <h1>SRKR Canteen</h1>
+        <p>Admin Control Portal</p>
+    </div>
+    <div class="form-panel">
+        <div class="form-content">
+            <div class="form-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to manage the campus menu.</p>
+            </div>
+            <button type="button" class="btn-google" id="google-btn">
+                <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.654 32.657 29.223 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 01-4.087 5.571l6.19 5.238C42.022 36.218 44 30.561 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
                 Sign in with Google
             </button>
-            
         </div>
-    </main>
+    </div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
-            authDomain: "srkr-canteen.firebaseapp.com",
-            projectId: "srkr-canteen",
-            storageBucket: "srkr-canteen.firebasestorage.app"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
+        authDomain: "srkr-canteen.firebaseapp.com",
+        projectId: "srkr-canteen",
+        storageBucket: "srkr-canteen.firebasestorage.app"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-        // Redirect if already logged in
-        onAuthStateChanged(auth, (user) => {
-            if (user) window.location.href = 'manage-categories.html';
-        });
+    onAuthStateChanged(auth, (user) => { if (user) window.location.href = 'manage-categories.html'; });
 
-        // Login Handler with UI loading state
-        document.getElementById('admin-login-btn').addEventListener('click', async () => {
-            const btn = document.getElementById('admin-login-btn');
-            
-            // Visual feedback during login attempt
-            btn.innerText = "Signing in...";
-            btn.classList.add('opacity-80', 'cursor-not-allowed');
-            
-            try {
-                await signInWithPopup(auth, provider);
-                window.location.href = 'manage-categories.html';
-            } catch (error) {
-                console.error("Login Error: ", error);
-                alert("Failed to login. Please ensure your domain is authorized in Firebase.");
-                
-                // Reset button on failure
-                btn.innerText = "Sign in with Google";
-                btn.classList.remove('opacity-80', 'cursor-not-allowed');
-            }
-        });
-    </script>
+    document.getElementById('google-btn').addEventListener('click', async () => {
+        try {
+            await signInWithPopup(auth, provider);
+            window.location.href = 'manage-categories.html';
+        } catch (err) {
+            alert("Login Failed. Verify Firebase domains.");
+        }
+    });
+</script>
 </body>
 </html>
