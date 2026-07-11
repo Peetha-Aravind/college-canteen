@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SRKR Canteen</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { font-family: system-ui, -apple-system, sans-serif; background-color: #ffffff; }
-    </style>
+    <style>body { font-family: system-ui, sans-serif; background-color: #ffffff; }</style>
 </head>
 <body class="text-gray-800 min-h-screen">
     
@@ -20,18 +18,29 @@
         <h2 class="text-2xl font-bold text-gray-900 mb-2">Welcome</h2>
         <p class="text-gray-500 mb-8 text-sm">Sign in to manage the canteen system.</p>
         
-        <div class="space-y-4">
-            <button id="admin-login-btn" class="w-full bg-gray-900 hover:bg-black text-white py-3 px-4 rounded-lg font-medium transition-colors">
-                Sign in with Google
-            </button>
-        </div>
+        <button id="admin-login-btn" class="w-full bg-gray-900 hover:bg-black text-white py-3 px-4 rounded-lg font-medium transition-colors">
+            Sign in with Google
+        </button>
     </main>
 
     <script type="module">
-        import { auth, provider } from './firebase-config.js';
-        import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // If already logged in, skip the login page
+        const firebaseConfig = {
+            apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
+            authDomain: "srkr-canteen.firebaseapp.com",
+            projectId: "srkr-canteen",
+            storageBucket: "srkr-canteen.firebasestorage.app",
+            messagingSenderId: "517139623544",
+            appId: "1:517139623544:web:7850569e70193c9943478d",
+            measurementId: "G-Q8QR172WVY"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
         onAuthStateChanged(auth, (user) => {
             if (user) window.location.href = 'manage-categories.html';
         });
@@ -42,7 +51,7 @@
                 window.location.href = 'manage-categories.html';
             } catch (error) {
                 console.error("Login Error: ", error);
-                alert("Failed to login. Please ensure your domain is authorized in Firebase.");
+                alert("Failed to login.");
             }
         });
     </script>
