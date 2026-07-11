@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - SRKR Canteen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: #ffffff; }
+    </style>
+</head>
+<body class="text-gray-800 min-h-screen">
+    
+    <nav class="border-b border-gray-200 px-6 py-4 flex justify-between items-center bg-gray-50">
+        <button onclick="window.history.back()" class="text-sm font-bold text-gray-500 hover:text-gray-900">Back</button>
+        <span class="text-xl font-bold tracking-tight text-gray-900">SRKR Canteen</span>
+    </nav>
+
+    <main class="max-w-2xl mx-auto py-12 px-6">
+        <h2 id="form-title" class="text-2xl font-bold text-gray-900 mb-6">Add Product Details</h2>
+        
+        <form id="product-form" class="space-y-5 border border-gray-200 p-6 rounded-xl shadow-sm">
+            <div>
+                <label class="block text-sm font-medium mb-1 text-gray-700">Product Name</label>
+                <input type="text" id="prod-name" required class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-1 text-gray-700">Description</label>
+                <textarea id="prod-desc" required rows="3" class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900"></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-1 text-gray-700">Image URL</label>
+                <input type="url" id="prod-image" required class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-1 text-gray-700">Product Types / Variations</label>
+                <input type="text" id="prod-types" required placeholder="e.g. Single, Full, Spicy" class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900">
+                <p class="text-xs text-gray-500 mt-1">Separate variations with commas.</p>
+            </div>
+            
+            <hr class="border-gray-200 my-4">
+            
+            <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-medium py-3 rounded-lg transition-colors">
+                Save Product
+            </button>
+        </form>
+    </main>
+
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import { collection, addDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Extract IDs from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryId = urlParams.get('categoryId');
+        const productId = urlParams.get('productId');
+
+        // If a Product ID exists in the URL, we are in EDIT mode
+        if (productId) {
+            document.getElementById('form-title').innerText = "Edit Product Details";
+            
+            // Fetch existing data and fill the form
+            getDoc(doc(db, "products", productId)).then(docSnap => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('prod-name').value = data.name || '';
+                    document.getElementById('prod-desc').value = data.description || '';
+                    document.getElementById('prod-image').value = data.image || '';
+                    document.getElementById('prod-types').value = data.types || '';
+                }
+            });
+        }
+
+        // Handle Save
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const payload = {
+                name: document.getElementById('prod-name').value,
+                description: document.getElementById('prod-desc').value,
+                image: document.getElementById('prod-image').value,
+                types: document.getElementById('prod-types').value,
+                categoryId: categoryId,
+                active: true
+            };
+
+            try {
+                if (productId) {
+                    // Update existing
+                    await updateDoc(doc(db, "products", productId), payload);
+                } else {
+                    // Create new
+                    await addDoc(collection(db, "products"), payload);
+                }
+                // Navigate back to the previous page when done
+                window.history.back(); 
+            } catch (error) {
+                console.error("Error saving product: ", error);
+                alert("Failed to save product.");
+            }
+        });
+    </script>
+</body>
+</html>
