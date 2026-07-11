@@ -5,23 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Products - SRKR Canteen</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>body { font-family: system-ui, sans-serif; background-color: #ffffff; }</style>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: #fafafa; }
+        .card-shadow { box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05); }
+    </style>
 </head>
 <body class="text-gray-800 min-h-screen">
     
-    <nav class="border-b border-gray-200 px-6 py-4 flex justify-between items-center bg-gray-50">
-        <a href="manage-categories.html" class="text-sm font-bold text-gray-500 hover:text-gray-900">Back to Categories</a>
+    <nav class="border-b border-gray-200 px-6 py-4 flex justify-between items-center bg-white shadow-sm sticky top-0 z-10">
+        <div class="flex items-center space-x-4">
+            <a href="manage-categories.html" class="text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors">← Back to Categories</a>
+        </div>
         <span class="text-xl font-bold tracking-tight text-gray-900">SRKR Canteen</span>
     </nav>
 
     <main class="max-w-7xl mx-auto px-6 py-8">
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-between items-center mb-8 border-b border-gray-200 pb-4">
             <h2 id="page-title" class="text-2xl font-bold text-gray-900">Products</h2>
-            <a id="add-product-btn" href="#" class="bg-gray-900 hover:bg-black text-white font-medium py-2.5 px-5 rounded-lg">Add Product</a>
+            <a id="add-product-btn" href="#" class="bg-gray-900 hover:bg-black text-white font-medium py-2.5 px-5 rounded-lg shadow-sm transition-colors">
+                Add New Product
+            </a>
         </div>
-        <hr class="border-gray-200 mb-6">
         
-        <div id="products-container" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </main>
 
     <script type="module">
@@ -42,7 +48,7 @@
         const categoryId = urlParams.get('categoryId');
         const categoryName = urlParams.get('categoryName');
 
-        document.getElementById('page-title').innerText = `${categoryName || 'Category'} Products`;
+        document.getElementById('page-title').innerText = `${categoryName || 'Category'} - Products`;
         document.getElementById('add-product-btn').href = `product.html?categoryId=${categoryId}`;
 
         const q = query(collection(db, "products"), where("categoryId", "==", categoryId));
@@ -56,28 +62,38 @@
                 const id = docSnap.id;
                 const isChecked = data.active !== false ? 'checked' : '';
                 
+                const typesHtml = data.types ? data.types.split(',').map(t => `<span class="bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded-md">${t.trim()}</span>`).join(' ') : '';
+
                 container.innerHTML += `
-                    <div class="border border-gray-200 rounded-xl overflow-hidden flex flex-col">
-                        <img src="${data.image}" class="w-full h-40 object-cover bg-gray-100">
-                        <div class="p-4 flex flex-col flex-1">
-                            <h3 class="font-bold text-gray-900 mb-1">${data.name}</h3>
-                            <p class="text-sm text-gray-500 mb-4 line-clamp-2">${data.description}</p>
-                            <div class="flex items-center justify-between mb-4 mt-auto">
-                                <span class="text-sm font-medium text-gray-500">Status</span>
-                                <input type="checkbox" ${isChecked} onchange="window.toggleProdStatus('${id}', this.checked)">
+                    <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden flex flex-col card-shadow">
+                        <img src="${data.image}" alt="${data.name}" class="w-full h-40 object-cover bg-gray-50 border-b border-gray-50">
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-lg text-gray-900 mb-1">${data.name}</h3>
+                            <p class="text-sm text-gray-500 mb-3 line-clamp-2">${data.description}</p>
+                            
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                ${typesHtml}
                             </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <a href="product.html?categoryId=${categoryId}&productId=${id}" class="bg-gray-100 text-center py-2 rounded-lg text-sm font-medium text-gray-800 hover:bg-gray-200">Edit</a>
-                                <button onclick="window.deleteProd('${id}')" class="border border-red-200 text-red-600 py-2 rounded-lg text-sm font-medium hover:bg-red-50">Delete</button>
+                            
+                            <div class="flex items-center justify-between mb-5 mt-auto bg-gray-50 p-3 rounded-lg">
+                                <span class="text-sm font-semibold text-gray-600">Available</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" ${isChecked} onchange="window.toggleProdStatus('${id}', this.checked)" class="sr-only peer">
+                                    <div class="w-10 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500"></div>
+                                </label>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-3 border-t border-gray-100 pt-4">
+                                <a href="product.html?categoryId=${categoryId}&productId=${id}" class="bg-gray-50 text-center py-2 rounded-xl text-sm font-semibold text-gray-800 border border-gray-200 hover:bg-gray-100 transition-colors">Edit</a>
+                                <button onclick="window.deleteProd('${id}')" class="bg-white border border-red-200 text-red-600 py-2 rounded-xl text-sm font-semibold hover:bg-red-50 transition-colors">Delete</button>
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
         });
 
         window.toggleProdStatus = async (id, status) => updateDoc(doc(db, "products", id), { active: status });
-        window.deleteProd = async (id) => confirm("Delete product?") && deleteDoc(doc(db, "products", id));
+        window.deleteProd = async (id) => confirm("Are you sure you want to delete this product?") && deleteDoc(doc(db, "products", id));
     </script>
 </body>
 </html>
