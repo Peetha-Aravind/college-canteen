@@ -6,7 +6,6 @@
     <title>Products - SRKR Canteen</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Exact same styling base as Categories */
         :root {
             --accent: #f97316; --accent-dark: #ea580c; --bg: #f8fafc; --surface: #ffffff;
             --text: #0f172a; --text-light: #64748b; --border: #e2e8f0; --danger: #ef4444; --success: #10b981;
@@ -71,7 +70,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, query, where, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, query, where, onSnapshot, doc, deleteDoc, updateDoc, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const app = initializeApp({
         apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
@@ -93,8 +92,15 @@
     onSnapshot(q, (snapshot) => {
         const container = document.getElementById('products-container');
         container.innerHTML = '';
+        
+        if (snapshot.empty) {
+            container.innerHTML = '<p style="color: var(--text-light); text-align: center; grid-column: 1 / -1; padding: 2rem;">No products found in this category.</p>';
+            return;
+        }
+
         snapshot.forEach((docSnap) => {
-            const data = docSnap.data(); const id = docSnap.id;
+            const data = docSnap.data(); 
+            const id = docSnap.id;
             const isChecked = data.active !== false ? 'checked' : '';
             const typesHtml = data.types ? data.types.split(',').map(t => `<span class="pill">${t.trim()}</span>`).join('') : '';
 
@@ -123,7 +129,23 @@
     });
 
     window.toggleStatus = (id, status) => updateDoc(doc(db, "products", id), { active: status });
-    window.deleteItem = (id) => confirm("Delete this product?") && deleteDoc(doc(db, "products", id));
+    
+    window.deleteItem = async (id) => {
+        if(confirm("Delete this product?")) {
+            try {
+                // 1. Delete the document from the 'products' collection
+                await deleteDoc(doc(db, "products", id));
+                
+                // 2. Remove the ID from the parent category's 'relatedProducts' array
+                const categoryRef = doc(db, "categories", categoryId);
+                await updateDoc(categoryRef, {
+                    relatedProducts: arrayRemove(id)
+                });
+            } catch (err) {
+                console.error("Error deleting product:", err);
+            }
+        }
+    };
 </script>
 </body>
 </html>
