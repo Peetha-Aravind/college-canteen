@@ -72,6 +72,10 @@
                 <input type="url" id="prod-image" required placeholder="https://...">
             </div>
             <div class="input-group">
+                <label>Price (₹)</label>
+                <input type="number" id="prod-price" required min="0" step="0.01" placeholder="e.g. 45">
+            </div>
+            <div class="input-group">
                 <label>Types / Variations</label>
                 <input type="text" id="prod-types" required placeholder="e.g. Single, Full, Spicy">
                 <span class="input-help">Separate variations with commas</span>
@@ -107,6 +111,7 @@
                 document.getElementById('prod-name').value = data.name || '';
                 document.getElementById('prod-desc').value = data.description || '';
                 document.getElementById('prod-image').value = data.image || '';
+                document.getElementById('prod-price').value = data.price || ''; // Populates price
                 document.getElementById('prod-types').value = data.types || '';
             }
         });
@@ -122,6 +127,7 @@
             name: document.getElementById('prod-name').value,
             description: document.getElementById('prod-desc').value,
             image: document.getElementById('prod-image').value,
+            price: Number(document.getElementById('prod-price').value), // Converts input to a Number for Firestore
             types: document.getElementById('prod-types').value,
             categoryId: categoryId,
             active: true
