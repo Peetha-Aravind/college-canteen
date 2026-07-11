@@ -6,14 +6,10 @@
     <title>SRKR Canteen - Admin & User Portal</title>
 
     <!-- Firebase Compat SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js">
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <style>
         :root {
@@ -51,7 +47,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ============ SCREENS ============ */
         .screen {
             display: none;
             min-height: 100vh;
@@ -72,7 +67,6 @@
             }
         }
 
-        /* ============ LOGIN SCREEN ============ */
         #login-screen {
             display: flex;
             align-items: center;
@@ -154,7 +148,6 @@
             margin-top: 16px;
         }
 
-        /* ============ HEADER BAR ============ */
         .top-bar {
             display: flex;
             align-items: center;
@@ -227,14 +220,12 @@
             border: 2px solid var(--primary-light);
         }
 
-        /* ============ MAIN CONTENT AREA ============ */
         .content-area {
             padding: 24px;
             max-width: 1300px;
             margin: 0 auto;
         }
 
-        /* ============ CARDS GRID ============ */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -379,7 +370,6 @@
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
         }
 
-        /* ============ TOGGLE SWITCH ============ */
         .toggle-wrapper {
             display: flex;
             align-items: center;
@@ -431,7 +421,6 @@
             transform: translateX(21px);
         }
 
-        /* ============ MODAL ============ */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -446,12 +435,8 @@
             display: flex;
         }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .modal {
             background: #fff;
@@ -463,21 +448,14 @@
             animation: scaleIn 0.25s ease;
         }
         @keyframes scaleIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
         .modal h2 {
             margin-bottom: 18px;
             color: #370617;
         }
 
-        /* ============ FORM STYLES ============ */
         .form-group {
             margin-bottom: 16px;
         }
@@ -525,7 +503,6 @@
             display: block;
         }
 
-        /* ============ EMPTY STATE ============ */
         .empty-state {
             text-align: center;
             padding: 50px 20px;
@@ -539,7 +516,6 @@
             font-size: 1rem;
         }
 
-        /* ============ USER HOME ============ */
         .menu-section {
             margin-bottom: 32px;
         }
@@ -594,7 +570,6 @@
             color: #888;
         }
 
-        /* ============ RESPONSIVE ============ */
         @media (max-width: 600px) {
             .cards-grid {
                 grid-template-columns: 1fr;
@@ -629,22 +604,22 @@
 </head>
 <body>
 
-    <!-- ==================== LOGIN SCREEN ==================== -->
+    <!-- LOGIN SCREEN -->
     <div id="login-screen" class="screen active">
         <div class="login-card">
             <div class="logo-icon">🍽️</div>
             <h1>SRKR Canteen</h1>
             <p class="subtitle">Admin & User Portal</p>
             <button class="btn-google" id="btn-google-login">
-                <img src="https://www.google.com/favicon.ico" alt="Google" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><path fill=%22%234285F4%22 d=%22M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z%22/><path fill=%22%2334A853%22 d=%22M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z%22/><path fill=%22%23FBBC05%22 d=%22M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z%22/><path fill=%22%23EA4335%22 d=%22M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z%22/></svg>';">
+                <img src="https://www.google.com/favicon.ico" alt="Google" onerror="this.src='data:image/svg+xml,...'">
                 Sign in with Google
             </button>
             <div class="login-divider">secure authentication</div>
-            <p class="login-info">Use your SRKR college email to sign in.<br>First-time sign-in may auto-register as admin.</p>
+            <p class="login-info">Use your college email to sign in.</p>
         </div>
     </div>
 
-    <!-- ==================== ADMIN - MANAGE CATEGORIES SCREEN ==================== -->
+    <!-- ADMIN CATEGORIES SCREEN -->
     <div id="admin-categories-screen" class="screen">
         <div class="top-bar">
             <button class="btn-back" id="btn-back-from-categories">
@@ -659,28 +634,24 @@
             <div class="cards-grid" id="categories-cards-container">
                 <div class="empty-state">
                     <div class="icon">📭</div>
-                    <p>No categories yet. Click "Add Category" to get started.</p>
+                    <p>No categories yet.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ==================== ADD CATEGORY MODAL ==================== -->
+    <!-- ADD CATEGORY MODAL (no image URL) -->
     <div class="modal-overlay" id="modal-add-category">
         <div class="modal">
             <h2 id="modal-category-title">Add New Category</h2>
             <div class="form-group">
                 <label>Category Name *</label>
-                <input type="text" id="cat-name-input" placeholder="e.g., Breakfast, Lunch, Snacks...">
+                <input type="text" id="cat-name-input" placeholder="e.g., Breakfast, Lunch...">
             </div>
             <div class="form-group">
-                <label>Image URL</label>
-                <input type="text" id="cat-image-url-input" placeholder="https://example.com/image.jpg">
-                <small style="color:#999;">Paste an image URL or upload below</small>
-            </div>
-            <div class="form-group">
-                <label>Or Upload Image</label>
+                <label>Upload Image</label>
                 <input type="file" id="cat-image-file-input" accept="image/*">
+                <small style="color:#999;">Select an image for the category</small>
             </div>
             <img id="cat-img-preview" class="img-preview" alt="Preview">
             <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px;">
@@ -690,7 +661,7 @@
         </div>
     </div>
 
-    <!-- ==================== ADMIN - MANAGE PRODUCTS SCREEN ==================== -->
+    <!-- ADMIN PRODUCTS SCREEN -->
     <div id="admin-products-screen" class="screen">
         <div class="top-bar">
             <button class="btn-back" id="btn-back-from-products">
@@ -705,13 +676,13 @@
             <div class="cards-grid" id="products-cards-container">
                 <div class="empty-state">
                     <div class="icon">📭</div>
-                    <p>No products in this category yet.</p>
+                    <p>No products yet.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ==================== ADMIN - ADD/EDIT PRODUCT SCREEN ==================== -->
+    <!-- ADD/EDIT PRODUCT SCREEN -->
     <div id="admin-product-form-screen" class="screen">
         <div class="top-bar">
             <button class="btn-back" id="btn-back-from-product-form">
@@ -733,7 +704,7 @@
             <div class="form-group">
                 <label>Image URL</label>
                 <input type="text" id="prod-image-url-input" placeholder="https://example.com/image.jpg">
-                <small style="color:#999;">Paste an image URL or upload below</small>
+                <small style="color:#999;">Paste image URL or upload below</small>
             </div>
             <div class="form-group">
                 <label>Or Upload Image</label>
@@ -742,8 +713,7 @@
             <img id="prod-img-preview" class="img-preview" alt="Preview">
             <div class="form-group">
                 <label>Type</label>
-                <input type="text" id="prod-type-input" placeholder="e.g., Veg, Non-Veg, Beverage, Snack, Dessert..."
-                list="type-suggestions">
+                <input type="text" id="prod-type-input" placeholder="e.g., Veg, Non-Veg, Beverage" list="type-suggestions">
                 <datalist id="type-suggestions">
                     <option value="Veg">
                     <option value="Non-Veg">
@@ -762,7 +732,7 @@
         </div>
     </div>
 
-    <!-- ==================== USER HOME SCREEN ==================== -->
+    <!-- USER HOME SCREEN -->
     <div id="user-home-screen" class="screen">
         <div class="top-bar">
             <button class="btn-back" id="btn-back-from-user-home">
@@ -782,7 +752,7 @@
 
     <script>
         (function() {
-            // ==================== FIREBASE CONFIG ====================
+            // Firebase config
             const firebaseConfig = {
                 apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
                 authDomain: "srkr-canteen.firebaseapp.com",
@@ -793,106 +763,86 @@
                 measurementId: "G-Q8QR172WVY"
             };
 
-            // Initialize Firebase
             firebase.initializeApp(firebaseConfig);
             const auth = firebase.auth();
             const db = firebase.firestore();
             const storage = firebase.storage();
 
-            // ==================== GLOBAL STATE ====================
+            // State
             let currentUser = null;
             let isAdmin = false;
-            let currentCategoryId = null; // For products page
+            let currentCategoryId = null;
             let currentCategoryName = null;
-            let editingProductId = null; // For edit mode
+            let editingProductId = null;
             let editingProductData = null;
             let selectedCatImageFile = null;
             let selectedProdImageFile = null;
 
-            // ==================== DOM REFERENCES ====================
-            // Screens
+            // DOM screens
             const loginScreen = document.getElementById('login-screen');
             const adminCategoriesScreen = document.getElementById('admin-categories-screen');
             const adminProductsScreen = document.getElementById('admin-products-screen');
             const adminProductFormScreen = document.getElementById('admin-product-form-screen');
             const userHomeScreen = document.getElementById('user-home-screen');
-
-            // Modal
             const modalAddCategory = document.getElementById('modal-add-category');
 
-            // ==================== SCREEN NAVIGATION ====================
             function showScreen(screen) {
-                const allScreens = [loginScreen, adminCategoriesScreen, adminProductsScreen,
-                    adminProductFormScreen, userHomeScreen
-                ];
-                allScreens.forEach(s => s.classList.remove('active'));
-                if (screen) {
-                    screen.classList.add('active');
-                }
-                // Close modal if open
+                [loginScreen, adminCategoriesScreen, adminProductsScreen, adminProductFormScreen, userHomeScreen]
+                    .forEach(s => s.classList.remove('active'));
+                if (screen) screen.classList.add('active');
                 modalAddCategory.classList.remove('active');
-                // Reset scroll
                 window.scrollTo(0, 0);
             }
 
-            // ==================== AUTH ====================
             function updateUserBadges() {
                 const photoURL = currentUser?.photoURL || '';
                 const displayName = currentUser?.displayName || 'User';
-                const badgeHTML =
-                    `<img src="${photoURL}" alt="" onerror="this.style.display='none';"> <span>${displayName}</span>`;
-                document.getElementById('admin-badge-cat').innerHTML = badgeHTML;
-                document.getElementById('admin-badge-prod').innerHTML = badgeHTML;
-                document.getElementById('admin-badge-form').innerHTML = badgeHTML;
-                document.getElementById('user-badge-home').innerHTML = badgeHTML;
+                const html = `<img src="${photoURL}" alt="" onerror="this.style.display='none';"> <span>${displayName}</span>`;
+                document.getElementById('admin-badge-cat').innerHTML = html;
+                document.getElementById('admin-badge-prod').innerHTML = html;
+                document.getElementById('admin-badge-form').innerHTML = html;
+                document.getElementById('user-badge-home').innerHTML = html;
             }
 
             async function checkIfAdmin(email) {
                 if (!email) return false;
                 try {
-                    const docSnap = await db.collection('admins').doc(email).get();
-                    return docSnap.exists;
+                    const snap = await db.collection('admins').doc(email).get();
+                    return snap.exists;
                 } catch (err) {
-                    console.error('Error checking admin:', err);
+                    console.error('Admin check error:', err);
                     return false;
                 }
             }
 
             async function autoRegisterFirstAdmin(email) {
-                // If admins collection is empty, make this user the first admin
                 try {
-                    const snapshot = await db.collection('admins').limit(1).get();
-                    if (snapshot.empty) {
+                    const snap = await db.collection('admins').limit(1).get();
+                    if (snap.empty) {
                         await db.collection('admins').doc(email).set({
                             email: email,
                             addedAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
-                        console.log('First admin auto-registered:', email);
                         return true;
                     }
                     return false;
                 } catch (err) {
-                    console.error('Error auto-registering admin:', err);
+                    console.error('Auto admin error:', err);
                     return false;
                 }
             }
 
-            function handleAuthState(user) {
+            function handleAuth(user) {
                 if (user) {
                     currentUser = user;
                     updateUserBadges();
-                    checkIfAdmin(user.email).then(async (adminStatus) => {
-                        if (!adminStatus) {
-                            // Try auto-register as first admin
-                            const becameAdmin = await autoRegisterFirstAdmin(user.email);
-                            isAdmin = becameAdmin || adminStatus;
-                            if (becameAdmin) {
-                                isAdmin = true;
-                            }
+                    checkIfAdmin(user.email).then(async (admin) => {
+                        if (!admin) {
+                            const became = await autoRegisterFirstAdmin(user.email);
+                            isAdmin = became || admin;
                         } else {
                             isAdmin = true;
                         }
-
                         if (isAdmin) {
                             showScreen(adminCategoriesScreen);
                             loadCategories();
@@ -901,7 +851,6 @@
                             loadUserMenu();
                         }
                     }).catch(() => {
-                        // Fallback: show user home
                         isAdmin = false;
                         showScreen(userHomeScreen);
                         loadUserMenu();
@@ -913,32 +862,23 @@
                     editingProductData = null;
                     currentCategoryId = null;
                     currentCategoryName = null;
-                    selectedCatImageFile = null;
-                    selectedProdImageFile = null;
                     showScreen(loginScreen);
                 }
             }
 
-            // Listen to auth state
-            auth.onAuthStateChanged(handleAuthState);
+            auth.onAuthStateChanged(handleAuth);
 
-            // Google Sign-In
             document.getElementById('btn-google-login').addEventListener('click', () => {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.setCustomParameters({ prompt: 'select_account' });
-                auth.signInWithPopup(provider).catch((error) => {
-                    console.error('Login error:', error);
-                    alert('Login failed: ' + error.message);
+                auth.signInWithPopup(provider).catch(err => {
+                    console.error('Login error:', err);
+                    alert('Login failed: ' + err.message);
                 });
             });
 
-            // Logout
             function doLogout() {
-                auth.signOut().then(() => {
-                    showScreen(loginScreen);
-                }).catch(err => {
-                    console.error('Logout error:', err);
-                });
+                auth.signOut().catch(console.error);
             }
             document.getElementById('btn-logout-cat').addEventListener('click', doLogout);
             document.getElementById('btn-logout-prod').addEventListener('click', doLogout);
@@ -947,64 +887,53 @@
             document.getElementById('btn-back-from-categories').addEventListener('click', doLogout);
             document.getElementById('btn-back-from-user-home').addEventListener('click', doLogout);
 
-            // ==================== IMAGE UPLOAD HELPER ====================
-            async function uploadImageAndGetURL(file, folderPath) {
+            async function uploadImageAndGetURL(file, folder) {
                 if (!file) return null;
-                const timestamp = Date.now();
                 const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-                const storagePath = `${folderPath}/${timestamp}_${safeName}`;
-                const storageRef = storage.ref(storagePath);
-                const snapshot = await storageRef.put(file);
-                const downloadURL = await snapshot.ref.getDownloadURL();
-                return downloadURL;
+                const path = `${folder}/${Date.now()}_${safeName}`;
+                const ref = storage.ref(path);
+                const snapshot = await ref.put(file);
+                return await snapshot.ref.getDownloadURL();
             }
 
-            // ==================== CATEGORY CRUD ====================
+            // Category functions
             async function loadCategories() {
                 const container = document.getElementById('categories-cards-container');
-                container.innerHTML =
-                    '<div class="empty-state"><div class="icon">⏳</div><p>Loading categories...</p></div>';
+                container.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>Loading...</p></div>';
                 try {
-                    const snapshot = await db.collection('categories').orderBy('createdAt', 'desc').get();
-                    if (snapshot.empty) {
-                        container.innerHTML =
-                            '<div class="empty-state"><div class="icon">📭</div><p>No categories yet. Click "Add Category" to get started.</p></div>';
+                    const snap = await db.collection('categories').orderBy('createdAt', 'desc').get();
+                    if (snap.empty) {
+                        container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No categories yet.</p></div>';
                         return;
                     }
                     let html = '';
-                    snapshot.forEach(doc => {
+                    snap.forEach(doc => {
                         const cat = doc.data();
-                        const catId = doc.id;
-                        const imgHTML = cat.image ?
-                            `<img src="${cat.image}" alt="${cat.name}" class="card-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` +
-                            `<div class="card-img-placeholder" style="display:none;">📷</div>` :
-                            `<div class="card-img-placeholder">📷</div>`;
-                        const isActive = cat.isActive !== false;
+                        const id = doc.id;
+                        const img = cat.image ? `<img src="${cat.image}" alt="${cat.name}" class="card-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="card-img-placeholder" style="display:none;">📷</div>` :
+                            '<div class="card-img-placeholder">📷</div>';
+                        const active = cat.isActive !== false;
                         html += `
                         <div class="card">
-                            ${imgHTML}
-                            <div class="card-body">
-                                <h3>${escapeHTML(cat.name)}</h3>
-                            </div>
+                            ${img}
+                            <div class="card-body"><h3>${escapeHTML(cat.name)}</h3></div>
                             <div class="card-actions">
                                 <div class="toggle-wrapper">
                                     <label class="toggle-switch">
-                                        <input type="checkbox" ${isActive ? 'checked' : ''} 
-                                               onchange="window._toggleCategory('${catId}', this.checked)">
+                                        <input type="checkbox" ${active ? 'checked' : ''} onchange="window._toggleCategory('${id}', this.checked)">
                                         <span class="toggle-slider"></span>
                                     </label>
-                                    <span class="toggle-label">${isActive ? 'ON' : 'OFF'}</span>
+                                    <span class="toggle-label">${active ? 'ON' : 'OFF'}</span>
                                 </div>
-                                <button class="btn-sm btn-manage" onclick="window._manageCategory('${catId}', '${escapeHTML(cat.name).replace(/'/g, "\\'")}')">📋 Manage</button>
-                                <button class="btn-sm btn-delete" onclick="window._deleteCategory('${catId}', '${escapeHTML(cat.name).replace(/'/g, "\\'")}')">🗑 Delete</button>
+                                <button class="btn-sm btn-manage" onclick="window._manageCategory('${id}', '${escapeHTML(cat.name).replace(/'/g, "\\'")}')">📋 Manage</button>
+                                <button class="btn-sm btn-delete" onclick="window._deleteCategory('${id}', '${escapeHTML(cat.name).replace(/'/g, "\\'")}')">🗑 Delete</button>
                             </div>
                         </div>`;
                     });
                     container.innerHTML = html;
                 } catch (err) {
-                    console.error('Error loading categories:', err);
-                    container.innerHTML =
-                        '<div class="empty-state"><div class="icon">❌</div><p>Error loading categories. Please try again.</p></div>';
+                    console.error(err);
+                    container.innerHTML = '<div class="empty-state"><div class="icon">❌</div><p>Error loading.</p></div>';
                 }
             }
 
@@ -1014,19 +943,11 @@
                 return div.innerHTML;
             }
 
-            // Expose functions to window for inline onclick
-            window._toggleCategory = async function(catId, isActive) {
-                try {
-                    await db.collection('categories').doc(catId).update({ isActive: isActive });
-                    // Update the label
-                    loadCategories();
-                } catch (err) {
-                    console.error('Error toggling category:', err);
-                    alert('Failed to update category status.');
-                }
+            window._toggleCategory = async (catId, checked) => {
+                await db.collection('categories').doc(catId).update({ isActive: checked });
+                loadCategories();
             };
-
-            window._manageCategory = function(catId, catName) {
+            window._manageCategory = (catId, catName) => {
                 currentCategoryId = catId;
                 currentCategoryName = catName;
                 document.getElementById('products-page-title').textContent = `📦 Products: ${catName}`;
@@ -1035,143 +956,95 @@
                 showScreen(adminProductsScreen);
                 loadProducts(catId);
             };
-
-            window._deleteCategory = async function(catId, catName) {
-                if (!confirm(`Are you sure you want to delete the category "${catName}"?\n\nThis will also delete ALL products under this category.`)) {
-                    return;
-                }
-                try {
-                    // Delete all products in this category
-                    const prodSnapshot = await db.collection('products').where('categoryId', '==', catId).get();
-                    const batch = db.batch();
-                    prodSnapshot.forEach(doc => batch.delete(doc.ref));
-                    batch.delete(db.collection('categories').doc(catId));
-                    await batch.commit();
-                    loadCategories();
-                } catch (err) {
-                    console.error('Error deleting category:', err);
-                    alert('Failed to delete category. Please try again.');
-                }
+            window._deleteCategory = async (catId, catName) => {
+                if (!confirm(`Delete "${catName}" and all its products?`)) return;
+                const batch = db.batch();
+                const prods = await db.collection('products').where('categoryId', '==', catId).get();
+                prods.forEach(doc => batch.delete(doc.ref));
+                batch.delete(db.collection('categories').doc(catId));
+                await batch.commit();
+                loadCategories();
             };
 
-            // Add Category Modal
+            // Category modal (no image URL)
             document.getElementById('btn-open-add-category-modal').addEventListener('click', () => {
                 document.getElementById('modal-category-title').textContent = 'Add New Category';
                 document.getElementById('cat-name-input').value = '';
-                document.getElementById('cat-image-url-input').value = '';
                 document.getElementById('cat-image-file-input').value = '';
                 document.getElementById('cat-img-preview').classList.remove('visible');
                 selectedCatImageFile = null;
                 modalAddCategory.classList.add('active');
             });
-
             document.getElementById('btn-cancel-category-modal').addEventListener('click', () => {
                 modalAddCategory.classList.remove('active');
             });
-
-            // Close modal on overlay click
-            modalAddCategory.addEventListener('click', function(e) {
-                if (e.target === modalAddCategory) {
-                    modalAddCategory.classList.remove('active');
-                }
-            });
-
-            // Image preview for category
-            document.getElementById('cat-image-url-input').addEventListener('input', function() {
-                const preview = document.getElementById('cat-img-preview');
-                if (this.value.trim()) {
-                    preview.src = this.value.trim();
-                    preview.classList.add('visible');
-                } else {
-                    preview.classList.remove('visible');
-                }
+            modalAddCategory.addEventListener('click', (e) => {
+                if (e.target === modalAddCategory) modalAddCategory.classList.remove('active');
             });
             document.getElementById('cat-image-file-input').addEventListener('change', function() {
                 selectedCatImageFile = this.files[0] || null;
                 const preview = document.getElementById('cat-img-preview');
                 if (selectedCatImageFile) {
                     const reader = new FileReader();
-                    reader.onload = (e) => {
-                        preview.src = e.target.result;
-                        preview.classList.add('visible');
-                    };
+                    reader.onload = e => { preview.src = e.target.result; preview.classList.add('visible'); };
                     reader.readAsDataURL(selectedCatImageFile);
                 } else {
                     preview.classList.remove('visible');
                 }
             });
-
-            // Save Category
             document.getElementById('btn-save-category').addEventListener('click', async function() {
                 const name = document.getElementById('cat-name-input').value.trim();
-                const imageURL = document.getElementById('cat-image-url-input').value.trim();
-
-                if (!name) {
-                    alert('Please enter a category name.');
-                    return;
-                }
-
-                const btn = this;
-                btn.disabled = true;
-                btn.textContent = 'Saving...';
-
+                if (!name) return alert('Category name required.');
+                this.disabled = true;
+                this.textContent = 'Saving...';
                 try {
-                    let finalImageURL = imageURL || null;
-                    // If a file was selected, upload it
+                    let imageURL = null;
                     if (selectedCatImageFile) {
-                        finalImageURL = await uploadImageAndGetURL(selectedCatImageFile, 'categories');
+                        imageURL = await uploadImageAndGetURL(selectedCatImageFile, 'categories');
                     }
-
                     await db.collection('categories').add({
-                        name: name,
-                        image: finalImageURL || '',
+                        name,
+                        image: imageURL || '',
                         isActive: true,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
-
                     modalAddCategory.classList.remove('active');
                     document.getElementById('cat-name-input').value = '';
-                    document.getElementById('cat-image-url-input').value = '';
                     document.getElementById('cat-image-file-input').value = '';
                     document.getElementById('cat-img-preview').classList.remove('visible');
                     selectedCatImageFile = null;
                     loadCategories();
                 } catch (err) {
-                    console.error('Error saving category:', err);
-                    alert('Failed to save category: ' + err.message);
+                    alert('Error: ' + err.message);
                 } finally {
-                    btn.disabled = false;
-                    btn.textContent = 'Save Category';
+                    this.disabled = false;
+                    this.textContent = 'Save Category';
                 }
             });
 
-            // ==================== PRODUCT CRUD ====================
+            // Products
             async function loadProducts(categoryId) {
                 const container = document.getElementById('products-cards-container');
-                container.innerHTML =
-                '<div class="empty-state"><div class="icon">⏳</div><p>Loading products...</p></div>';
+                container.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>Loading products...</p></div>';
                 try {
-                    const snapshot = await db.collection('products')
+                    const snap = await db.collection('products')
                         .where('categoryId', '==', categoryId)
                         .orderBy('createdAt', 'desc')
                         .get();
-                    if (snapshot.empty) {
-                        container.innerHTML =
-                            '<div class="empty-state"><div class="icon">📭</div><p>No products in this category yet. Click "Add Product" to add one.</p></div>';
+                    if (snap.empty) {
+                        container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No products yet.</p></div>';
                         return;
                     }
                     let html = '';
-                    snapshot.forEach(doc => {
+                    snap.forEach(doc => {
                         const prod = doc.data();
-                        const prodId = doc.id;
-                        const imgHTML = prod.image ?
-                            `<img src="${prod.image}" alt="${prod.name}" class="card-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` +
-                            `<div class="card-img-placeholder" style="display:none;">📷</div>` :
-                            `<div class="card-img-placeholder">📷</div>`;
-                        const isActive = prod.isActive !== false;
+                        const id = doc.id;
+                        const img = prod.image ? `<img src="${prod.image}" alt="${prod.name}" class="card-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="card-img-placeholder" style="display:none;">📷</div>` :
+                            '<div class="card-img-placeholder">📷</div>';
+                        const active = prod.isActive !== false;
                         html += `
                         <div class="card">
-                            ${imgHTML}
+                            ${img}
                             <div class="card-body">
                                 <h3>${escapeHTML(prod.name)}</h3>
                                 ${prod.description ? `<p class="desc">${escapeHTML(prod.description)}</p>` : ''}
@@ -1180,77 +1053,54 @@
                             <div class="card-actions">
                                 <div class="toggle-wrapper">
                                     <label class="toggle-switch">
-                                        <input type="checkbox" ${isActive ? 'checked' : ''} 
-                                               onchange="window._toggleProduct('${prodId}', this.checked)">
+                                        <input type="checkbox" ${active ? 'checked' : ''} onchange="window._toggleProduct('${id}', this.checked)">
                                         <span class="toggle-slider"></span>
                                     </label>
-                                    <span class="toggle-label">${isActive ? 'ON' : 'OFF'}</span>
+                                    <span class="toggle-label">${active ? 'ON' : 'OFF'}</span>
                                 </div>
-                                <button class="btn-sm btn-edit" onclick="window._editProduct('${prodId}')">✏️ Edit</button>
-                                <button class="btn-sm btn-delete" onclick="window._deleteProduct('${prodId}', '${escapeHTML(prod.name).replace(/'/g, "\\'")}')">🗑 Delete</button>
+                                <button class="btn-sm btn-edit" onclick="window._editProduct('${id}')">✏️ Edit</button>
+                                <button class="btn-sm btn-delete" onclick="window._deleteProduct('${id}', '${escapeHTML(prod.name).replace(/'/g, "\\'")}')">🗑 Delete</button>
                             </div>
                         </div>`;
                     });
                     container.innerHTML = html;
                 } catch (err) {
-                    console.error('Error loading products:', err);
-                    container.innerHTML =
-                        '<div class="empty-state"><div class="icon">❌</div><p>Error loading products.</p></div>';
+                    console.error(err);
+                    container.innerHTML = '<div class="empty-state"><div class="icon">❌</div><p>Error loading.</p></div>';
                 }
             }
 
-            window._toggleProduct = async function(prodId, isActive) {
-                try {
-                    await db.collection('products').doc(prodId).update({ isActive: isActive });
-                    if (currentCategoryId) loadProducts(currentCategoryId);
-                } catch (err) {
-                    console.error('Error toggling product:', err);
-                    alert('Failed to update product status.');
+            window._toggleProduct = async (prodId, checked) => {
+                await db.collection('products').doc(prodId).update({ isActive: checked });
+                if (currentCategoryId) loadProducts(currentCategoryId);
+            };
+            window._editProduct = async (prodId) => {
+                const doc = await db.collection('products').doc(prodId).get();
+                if (!doc.exists) return;
+                editingProductId = prodId;
+                editingProductData = doc.data();
+                document.getElementById('product-form-title').textContent = '✏️ Edit Product';
+                document.getElementById('prod-name-input').value = editingProductData.name || '';
+                document.getElementById('prod-desc-input').value = editingProductData.description || '';
+                document.getElementById('prod-image-url-input').value = editingProductData.image || '';
+                document.getElementById('prod-type-input').value = editingProductData.type || '';
+                document.getElementById('prod-image-file-input').value = '';
+                selectedProdImageFile = null;
+                const preview = document.getElementById('prod-img-preview');
+                if (editingProductData.image) {
+                    preview.src = editingProductData.image;
+                    preview.classList.add('visible');
+                } else {
+                    preview.classList.remove('visible');
                 }
+                showScreen(adminProductFormScreen);
+            };
+            window._deleteProduct = async (prodId, name) => {
+                if (!confirm(`Delete "${name}"?`)) return;
+                await db.collection('products').doc(prodId).delete();
+                if (currentCategoryId) loadProducts(currentCategoryId);
             };
 
-            window._editProduct = async function(prodId) {
-                try {
-                    const docSnap = await db.collection('products').doc(prodId).get();
-                    if (!docSnap.exists) {
-                        alert('Product not found.');
-                        return;
-                    }
-                    editingProductId = prodId;
-                    editingProductData = docSnap.data();
-                    document.getElementById('product-form-title').textContent = '✏️ Edit Product';
-                    document.getElementById('prod-name-input').value = editingProductData.name || '';
-                    document.getElementById('prod-desc-input').value = editingProductData.description || '';
-                    document.getElementById('prod-image-url-input').value = editingProductData.image || '';
-                    document.getElementById('prod-type-input').value = editingProductData.type || '';
-                    document.getElementById('prod-image-file-input').value = '';
-                    selectedProdImageFile = null;
-                    const preview = document.getElementById('prod-img-preview');
-                    if (editingProductData.image) {
-                        preview.src = editingProductData.image;
-                        preview.classList.add('visible');
-                    } else {
-                        preview.classList.remove('visible');
-                    }
-                    showScreen(adminProductFormScreen);
-                } catch (err) {
-                    console.error('Error fetching product for edit:', err);
-                    alert('Failed to load product data.');
-                }
-            };
-
-            window._deleteProduct = async function(prodId, prodName) {
-                if (!confirm(`Are you sure you want to delete "${prodName}"?`)) return;
-                try {
-                    await db.collection('products').doc(prodId).delete();
-                    if (currentCategoryId) loadProducts(currentCategoryId);
-                } catch (err) {
-                    console.error('Error deleting product:', err);
-                    alert('Failed to delete product.');
-                }
-            };
-
-            // Add Product button
             document.getElementById('btn-add-product').addEventListener('click', () => {
                 editingProductId = null;
                 editingProductData = null;
@@ -1264,22 +1114,12 @@
                 selectedProdImageFile = null;
                 showScreen(adminProductFormScreen);
             });
-
-            // Back from Products to Categories
             document.getElementById('btn-back-from-products').addEventListener('click', () => {
                 currentCategoryId = null;
-                currentCategoryName = null;
-                editingProductId = null;
-                editingProductData = null;
                 showScreen(adminCategoriesScreen);
                 loadCategories();
             });
-
-            // Back from Product Form to Products
             document.getElementById('btn-back-from-product-form').addEventListener('click', () => {
-                editingProductId = null;
-                editingProductData = null;
-                selectedProdImageFile = null;
                 if (currentCategoryId) {
                     showScreen(adminProductsScreen);
                     loadProducts(currentCategoryId);
@@ -1288,12 +1128,7 @@
                     loadCategories();
                 }
             });
-
-            // Cancel Product Form
             document.getElementById('btn-cancel-product-form').addEventListener('click', () => {
-                editingProductId = null;
-                editingProductData = null;
-                selectedProdImageFile = null;
                 if (currentCategoryId) {
                     showScreen(adminProductsScreen);
                     loadProducts(currentCategoryId);
@@ -1303,7 +1138,6 @@
                 }
             });
 
-            // Product image preview
             document.getElementById('prod-image-url-input').addEventListener('input', function() {
                 const preview = document.getElementById('prod-img-preview');
                 if (this.value.trim()) {
@@ -1318,158 +1152,98 @@
                 const preview = document.getElementById('prod-img-preview');
                 if (selectedProdImageFile) {
                     const reader = new FileReader();
-                    reader.onload = (e) => {
-                        preview.src = e.target.result;
-                        preview.classList.add('visible');
-                    };
+                    reader.onload = e => { preview.src = e.target.result; preview.classList.add('visible'); };
                     reader.readAsDataURL(selectedProdImageFile);
                 } else {
                     preview.classList.remove('visible');
                 }
             });
 
-            // Save Product
             document.getElementById('btn-save-product').addEventListener('click', async function() {
                 const name = document.getElementById('prod-name-input').value.trim();
+                if (!name) return alert('Product name required.');
+                if (!currentCategoryId) return alert('No category selected.');
                 const description = document.getElementById('prod-desc-input').value.trim();
                 const imageURL = document.getElementById('prod-image-url-input').value.trim();
                 const type = document.getElementById('prod-type-input').value.trim();
-
-                if (!name) {
-                    alert('Please enter a product name.');
-                    return;
-                }
-                if (!currentCategoryId) {
-                    alert('No category selected. Please go back and select a category first.');
-                    return;
-                }
-
-                const btn = this;
-                btn.disabled = true;
-                btn.textContent = 'Saving...';
-
+                this.disabled = true;
+                this.textContent = 'Saving...';
                 try {
-                    let finalImageURL = imageURL || null;
-                    // If a file was selected, upload it
+                    let finalImage = imageURL || null;
                     if (selectedProdImageFile) {
-                        finalImageURL = await uploadImageAndGetURL(selectedProdImageFile, 'products');
+                        finalImage = await uploadImageAndGetURL(selectedProdImageFile, 'products');
                     }
-
-                    const productData = {
+                    const data = {
                         categoryId: currentCategoryId,
                         categoryName: currentCategoryName || '',
-                        name: name,
-                        description: description,
-                        image: finalImageURL || '',
-                        type: type,
+                        name,
+                        description,
+                        image: finalImage || '',
+                        type,
                         isActive: true,
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     };
-
                     if (editingProductId) {
-                        // Update existing
-                        await db.collection('products').doc(editingProductId).update(productData);
+                        await db.collection('products').doc(editingProductId).update(data);
                     } else {
-                        // Add new
-                        productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                        await db.collection('products').add(productData);
+                        data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('products').add(data);
                     }
-
                     editingProductId = null;
-                    editingProductData = null;
-                    selectedProdImageFile = null;
-                    document.getElementById('prod-name-input').value = '';
-                    document.getElementById('prod-desc-input').value = '';
-                    document.getElementById('prod-image-url-input').value = '';
-                    document.getElementById('prod-type-input').value = '';
-                    document.getElementById('prod-image-file-input').value = '';
-                    document.getElementById('prod-img-preview').classList.remove('visible');
-
                     showScreen(adminProductsScreen);
                     loadProducts(currentCategoryId);
                 } catch (err) {
-                    console.error('Error saving product:', err);
-                    alert('Failed to save product: ' + err.message);
+                    alert('Error: ' + err.message);
                 } finally {
-                    btn.disabled = false;
-                    btn.textContent = 'Save Product';
+                    this.disabled = false;
+                    this.textContent = 'Save Product';
                 }
             });
 
-            // ==================== USER HOME - LOAD MENU ====================
+            // User menu
             async function loadUserMenu() {
                 const container = document.getElementById('user-menu-container');
-                container.innerHTML =
-                    '<div class="empty-state"><div class="icon">⏳</div><p>Loading menu...</p></div>';
+                container.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>Loading menu...</p></div>';
                 try {
-                    // Get active categories
-                    const catSnapshot = await db.collection('categories')
+                    const catSnap = await db.collection('categories')
                         .where('isActive', '==', true)
                         .orderBy('createdAt', 'desc')
                         .get();
-
-                    if (catSnapshot.empty) {
-                        container.innerHTML =
-                            '<div class="empty-state"><div class="icon">🍽️</div><p>The canteen menu is currently unavailable. Please check back later.</p></div>';
+                    if (catSnap.empty) {
+                        container.innerHTML = '<div class="empty-state"><div class="icon">🍽️</div><p>Menu unavailable.</p></div>';
                         return;
                     }
-
                     let html = '';
-                    for (const catDoc of catSnapshot.docs) {
+                    for (const catDoc of catSnap.docs) {
                         const cat = catDoc.data();
-                        const catId = catDoc.id;
-                        // Get active products for this category
-                        const prodSnapshot = await db.collection('products')
-                            .where('categoryId', '==', catId)
+                        const prodSnap = await db.collection('products')
+                            .where('categoryId', '==', catDoc.id)
                             .where('isActive', '==', true)
                             .orderBy('createdAt', 'desc')
                             .get();
-
-                        if (prodSnapshot.empty) continue; // Skip categories with no active products
-
-                        html += `<div class="menu-section">
-                            <h2>${escapeHTML(cat.name)}</h2>
-                            <div class="menu-products-grid">`;
-
-                        prodSnapshot.forEach(prodDoc => {
-                            const prod = prodDoc.data();
-                            const imgTag = prod.image ?
-                                `<img src="${prod.image}" alt="${prod.name}" onerror="this.style.display='none';">` :
-                                '';
-                            html += `
-                            <div class="menu-product-card">
-                                ${imgTag}
+                        if (prodSnap.empty) continue;
+                        html += `<div class="menu-section"><h2>${escapeHTML(cat.name)}</h2><div class="menu-products-grid">`;
+                        prodSnap.forEach(prodDoc => {
+                            const p = prodDoc.data();
+                            html += `<div class="menu-product-card">
+                                ${p.image ? `<img src="${p.image}" alt="${p.name}">` : ''}
                                 <div class="info">
-                                    <h4>${escapeHTML(prod.name)}</h4>
-                                    ${prod.type ? `<span class="mtype">${escapeHTML(prod.type)}</span>` : ''}
-                                    ${prod.description ? `<p class="mdesc">${escapeHTML(prod.description)}</p>` : ''}
+                                    <h4>${escapeHTML(p.name)}</h4>
+                                    ${p.type ? `<span class="mtype">${escapeHTML(p.type)}</span>` : ''}
+                                    ${p.description ? `<p class="mdesc">${escapeHTML(p.description)}</p>` : ''}
                                 </div>
                             </div>`;
                         });
-
                         html += `</div></div>`;
                     }
-
-                    if (!html) {
-                        container.innerHTML =
-                            '<div class="empty-state"><div class="icon">🍽️</div><p>The canteen menu is currently unavailable. Please check back later.</p></div>';
-                    } else {
-                        container.innerHTML = html;
-                    }
+                    container.innerHTML = html || '<div class="empty-state"><div class="icon">🍽️</div><p>No active items.</p></div>';
                 } catch (err) {
-                    console.error('Error loading menu:', err);
-                    container.innerHTML =
-                        '<div class="empty-state"><div class="icon">❌</div><p>Error loading menu. Please try again later.</p></div>';
+                    console.error(err);
+                    container.innerHTML = '<div class="empty-state"><div class="icon">❌</div><p>Error loading menu.</p></div>';
                 }
             }
 
-            // ==================== INITIAL STATE ====================
-            // Auth state listener already handles initial load
-            // If no user is logged in, login screen shows by default (it has .active in HTML)
-
-            console.log('🍽️ SRKR Canteen SPA initialized.');
-            console.log('Firebase project:', firebaseConfig.projectId);
-            console.log('Waiting for authentication...');
+            console.log('SRKR Canteen ready. Add your domain to Firebase Auth authorized domains.');
         })();
     </script>
 </body>
