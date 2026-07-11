@@ -5,22 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SRKR Canteen</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>body { font-family: system-ui, sans-serif; background-color: #ffffff; }</style>
+    <style>
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            background-color: #fafafa; 
+        }
+        
+        /* Custom clean shadow and border for the login card */
+        .glass-card {
+            background: #ffffff;
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
+        }
+    </style>
 </head>
-<body class="text-gray-800 min-h-screen">
+<body class="text-gray-800 min-h-screen flex flex-col">
     
-    <nav class="border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-        <span class="text-xl font-bold tracking-tight text-gray-900">SRKR Canteen</span>
-        <span class="text-sm font-medium text-gray-500">Admin Portal</span>
+    <nav class="border-b border-gray-100 bg-white px-8 py-5 flex justify-between items-center w-full sticky top-0">
+        <span class="text-2xl font-black tracking-tight text-gray-900">SRKR Canteen</span>
+        <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">Admin Portal</span>
     </nav>
 
-    <main class="max-w-md mx-auto my-24 border border-gray-200 rounded-xl p-8 text-center shadow-sm">
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">Welcome</h2>
-        <p class="text-gray-500 mb-8 text-sm">Sign in to manage the canteen system.</p>
-        
-        <button id="admin-login-btn" class="w-full bg-gray-900 hover:bg-black text-white py-3 px-4 rounded-lg font-medium transition-colors">
-            Sign in with Google
-        </button>
+    <main class="flex-grow flex items-center justify-center px-4">
+        <div class="glass-card w-full max-w-md rounded-2xl p-10 text-center transition-all duration-500 hover:shadow-2xl">
+            
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Welcome</h2>
+            <p class="text-gray-500 mb-10 text-sm font-medium">Sign in to manage the canteen system.</p>
+            
+            <button id="admin-login-btn" class="w-full bg-gray-900 text-white py-3.5 px-4 rounded-xl font-semibold tracking-wide transition-all duration-300 transform hover:-translate-y-1 hover:bg-black hover:shadow-xl hover:shadow-gray-300/50">
+                Sign in with Google
+            </button>
+            
+        </div>
     </main>
 
     <script type="module">
@@ -31,27 +47,36 @@
             apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
             authDomain: "srkr-canteen.firebaseapp.com",
             projectId: "srkr-canteen",
-            storageBucket: "srkr-canteen.firebasestorage.app",
-            messagingSenderId: "517139623544",
-            appId: "1:517139623544:web:7850569e70193c9943478d",
-            measurementId: "G-Q8QR172WVY"
+            storageBucket: "srkr-canteen.firebasestorage.app"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
+        // Redirect if already logged in
         onAuthStateChanged(auth, (user) => {
             if (user) window.location.href = 'manage-categories.html';
         });
 
+        // Login Handler with UI loading state
         document.getElementById('admin-login-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('admin-login-btn');
+            
+            // Visual feedback during login attempt
+            btn.innerText = "Signing in...";
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            
             try {
                 await signInWithPopup(auth, provider);
                 window.location.href = 'manage-categories.html';
             } catch (error) {
                 console.error("Login Error: ", error);
-                alert("Failed to login.");
+                alert("Failed to login. Please ensure your domain is authorized in Firebase.");
+                
+                // Reset button on failure
+                btn.innerText = "Sign in with Google";
+                btn.classList.remove('opacity-80', 'cursor-not-allowed');
             }
         });
     </script>
