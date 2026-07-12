@@ -40,7 +40,8 @@
         .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
         .card img { width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid var(--border); }
         .card-body { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
-        .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem; }
+        .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .card-subtitle { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem; }
         
         /* Custom Toggle Switch */
         .status-row { display: flex; justify-content: space-between; align-items: center; background: var(--bg); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; margin-top: auto; }
@@ -111,7 +112,8 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, onSnapshot, doc, deleteDoc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    // Added query, where, getDocs for deep deletion
+    import { getFirestore, collection, onSnapshot, doc, deleteDoc, updateDoc, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const app = initializeApp({
         apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
@@ -138,7 +140,12 @@
         const btn = e.target.querySelector('button[type="submit"]');
         btn.innerText = "Saving..."; btn.disabled = true;
         try {
-            await addDoc(collection(db, "categories"), { name: document.getElementById('cat-name').value, image: document.getElementById('cat-image').value, active: true });
+            await addDoc(collection(db, "categories"), { 
+                name: document.getElementById('cat-name').value, 
+                image: document.getElementById('cat-image').value, 
+                active: true,
+                relatedProducts: [] // Initialized empty array for products
+            });
             closeModal();
         } catch(err) { alert("Failed"); } finally { btn.innerText = "Save Category"; btn.disabled = false; }
     };
@@ -150,11 +157,16 @@
         snapshot.forEach((docSnap) => {
             const data = docSnap.data(); const id = docSnap.id;
             const isChecked = data.active !== false ? 'checked' : '';
+            
+            // Get count of products from array
+            const productCount = data.relatedProducts ? data.relatedProducts.length : 0;
+
             container.innerHTML += `
                 <div class="card">
                     <img src="${data.image}" alt="${data.name}">
                     <div class="card-body">
                         <div class="card-title">${data.name}</div>
+                        <div class="card-subtitle">${productCount} item(s)</div>
                         <div class="status-row">
                             <span>Available</span>
                             <label class="toggle">
@@ -163,7 +175,7 @@
                             </label>
                         </div>
                         <div class="card-actions">
-                            <a href="manage-products.html?categoryId=${id}&categoryName=${encodeURIComponent(data.name)}" class="btn-outline">Manage</a>
+                            <a href="products.html?categoryId=${id}&categoryName=${encodeURIComponent(data.name)}" class="btn-outline">Manage</a>
                             <button onclick="window.deleteItem('${id}')" class="btn-danger">Delete</button>
                         </div>
                     </div>
@@ -172,7 +184,29 @@
     });
 
     window.toggleStatus = (id, status) => updateDoc(doc(db, "categories", id), { active: status });
-    window.deleteItem = (id) => confirm("Delete this category?") && deleteDoc(doc(db, "categories", id));
+    
+    window.deleteItem = async (id) => {
+        if(confirm("Delete this category AND all items inside it? This cannot be undone.")) {
+            try {
+                // 1. Delete all associated products in the "products" collection
+                const q = query(collection(db, "products"), where("categoryId", "==", id));
+                const querySnapshot = await getDocs(q);
+                
+                const deletePromises = [];
+                querySnapshot.forEach((productDoc) => {
+                    deletePromises.push(deleteDoc(doc(db, "products", productDoc.id)));
+                });
+                
+                await Promise.all(deletePromises);
+
+                // 2. Delete the category itself
+                await deleteDoc(doc(db, "categories", id));
+            } catch(err) {
+                console.error("Error deleting category:", err);
+                alert("Failed to delete the category completely.");
+            }
+        }
+    };
 </script>
 </body>
 </html>
