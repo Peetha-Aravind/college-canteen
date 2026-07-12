@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Section Management - SRKR Canteen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --accent: #f97316;
+            --accent-dark: #ea580c;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --success: #10b981;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; }
+        nav {
+            background: var(--surface);
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        nav h1 { font-size: 1.25rem; font-weight: 700; color: var(--accent-dark); }
+        .btn-logout { background: none; border: none; color: var(--danger); font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+        .btn-logout:hover { color: #b91c1c; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-outline {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-outline:hover { background: var(--bg); }
+        .btn-danger {
+            background: white;
+            color: var(--danger);
+            border: 1px solid #fecaca;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-danger:hover { background: #fef2f2; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem; }
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-body { padding: 1rem; display: flex; flex-direction: column; flex: 1; }
+        .card-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+        .card-subtitle { font-size: 0.8rem; color: var(--text-light); margin-bottom: 1rem; }
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: flex-end;
+        }
+        /* Category list with reorder buttons */
+        .category-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .category-row {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+        .category-row:hover { box-shadow: var(--shadow-md); }
+        .category-row img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .category-info { flex: 1; }
+        .category-info h3 { font-size: 1.1rem; margin-bottom: 0.2rem; }
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .reorder-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .reorder-btns button {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            transition: 0.2s;
+        }
+        .reorder-btns button:hover { background: var(--bg); color: var(--text); }
+        /* Modal */
+        .modal { display: none; position: fixed; inset: 0; z-index: 50; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-overlay { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); }
+        .modal-content {
+            position: relative;
+            background: var(--surface);
+            width: 100%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            animation: popIn 0.25s ease;
+        }
+        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-body { padding: 1.5rem; }
+        .product-selector {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .product-selector .info { flex: 1; }
+        .product-selector .name { font-weight: 600; }
+        .product-selector .meta { font-size: 0.85rem; color: var(--text-light); }
+        .empty-message { text-align: center; color: var(--text-light); padding: 2rem; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <h1>SRKR Canteen · Sections</h1>
+    <button id="logout-btn" class="btn-logout">Logout</button>
+</nav>
+
+<div class="container">
+    <div class="section-title">
+        <span>⭐ Today’s Special</span>
+        <button id="add-special-btn" class="btn-primary">+ Add Product</button>
+    </div>
+    <div id="specials-container" class="grid"></div>
+
+    <div class="section-title" style="margin-top: 2.5rem;">
+        <span>📂 Categories</span>
+    </div>
+    <div id="categories-container" class="category-list"></div>
+</div>
+
+<div id="special-modal" class="modal">
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>Choose a Product</span>
+            <button id="close-modal-btn" class="btn-outline" style="padding:0.3rem 0.8rem;">✕</button>
+        </div>
+        <div class="modal-body" id="product-list"></div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+        getFirestore, doc, collection, onSnapshot, updateDoc, arrayUnion, arrayRemove, writeBatch, query, orderBy 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
+        authDomain: "srkr-canteen.firebaseapp.com",
+        projectId: "srkr-canteen",
+        storageBucket: "srkr-canteen.firebasestorage.app"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Redirect if not logged in
+    onAuthStateChanged(auth, (user) => {
+        if (!user) window.location.href = 'index.html';
+    });
+
+    // Logout
+    document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = 'index.html');
+
+    // ---------- Today's Special ----------
+    const specialsRef = doc(db, "todaySpecials", "current");
+    const specialsContainer = document.getElementById('specials-container');
+
+    // Listen to today's special doc
+    onSnapshot(specialsRef, (docSnap) => {
+        specialsContainer.innerHTML = '';
+        if (docSnap.exists() && docSnap.data().items) {
+            const items = docSnap.data().items;
+            if (items.length === 0) {
+                specialsContainer.innerHTML = '<div class="empty-message">No specials added yet. Click "+ Add Product" to start.</div>';
+                return;
+            }
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${item.image || 'https://via.placeholder.com/300x120?text=No+Image'}" alt="${item.productName}">
+                    <div class="card-body">
+                        <div class="card-title">${item.productName}</div>
+                        <div class="card-subtitle">Category: ${item.categoryName}</div>
+                        <div class="card-footer">
+                            <button class="btn-danger remove-special" data-index="${index}">Remove</button>
+                        </div>
+                    </div>
+                `;
+                specialsContainer.appendChild(card);
+            });
+            // Attach remove listeners
+            document.querySelectorAll('.remove-special').forEach(btn => {
+                btn.onclick = async () => {
+                    const idx = parseInt(btn.dataset.index);
+                    const currentItems = (await (await getDoc(specialsRef)).data())?.items || [];
+                    if (currentItems[idx]) {
+                        await updateDoc(specialsRef, { items: arrayRemove(currentItems[idx]) });
+                    }
+                };
+            });
+        } else {
+            specialsContainer.innerHTML = '<div class="empty-message">No specials added yet. Click "+ Add Product" to start.</div>';
+        }
+    });
+
+    // Modal control
+    const modal = document.getElementById('special-modal');
+    const openModal = () => modal.classList.add('active');
+    const closeModal = () => modal.classList.remove('active');
+    document.getElementById('add-special-btn').onclick = openModal;
+    document.getElementById('close-modal-btn').onclick = closeModal;
+    document.getElementById('modal-overlay').onclick = closeModal;
+
+    // Helper to get a fresh doc snapshot (for arrayUnion safety)
+    const getDoc = (ref) => import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js").then(m => m.getDoc(ref));
+
+    // Fetch all products from categories for the modal
+    async function loadProductSelector() {
+        const productListDiv = document.getElementById('product-list');
+        productListDiv.innerHTML = '<p>Loading products…</p>';
+        try {
+            // Get current specials items
+            const specialSnap = await getDoc(specialsRef);
+            const currentItems = specialSnap.exists() ? (specialSnap.data().items || []) : [];
+            const currentKeys = new Set(currentItems.map(i => `${i.categoryId}_${i.productId}`));
+
+            // Fetch all categories
+            const q = query(collection(db, "categories"), orderBy("order", "asc"));
+            const catSnap = await (await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js")).getDocs(q);
+            
+            productListDiv.innerHTML = '';
+            if (catSnap.empty) {
+                productListDiv.innerHTML = '<p class="empty-message">No categories or products found.</p>';
+                return;
+            }
+
+            catSnap.forEach(catDoc => {
+                const catData = catDoc.data();
+                const categoryId = catDoc.id;
+                const categoryName = catData.name;
+                const products = catData.products || [];
+                
+                products.forEach((prod, idx) => {
+                    // Use existing id or generate one from index + category
+                    const productId = prod.id || `${categoryId}_${idx}`;
+                    const key = `${categoryId}_${productId}`;
+                    const alreadyAdded = currentKeys.has(key);
+                    
+                    const selectorDiv = document.createElement('div');
+                    selectorDiv.className = 'product-selector';
+                    selectorDiv.innerHTML = `
+                        <div class="info">
+                            <div class="name">${prod.name || 'Unnamed'}</div>
+                            <div class="meta">Category: ${categoryName} ${prod.price ? '· ₹' + prod.price : ''}</div>
+                        </div>
+                        <button class="btn-primary ${alreadyAdded ? '' : ''}" ${alreadyAdded ? 'disabled style="opacity:0.5;"' : ''}>
+                            ${alreadyAdded ? 'Added' : 'Add'}
+                        </button>
+                    `;
+                    if (!alreadyAdded) {
+                        selectorDiv.querySelector('button').onclick = async () => {
+                            const itemToAdd = {
+                                categoryId: categoryId,
+                                categoryName: categoryName,
+                                productId: productId,
+                                productName: prod.name || 'Unnamed',
+                                image: prod.image || '',
+                                price: prod.price || 0
+                            };
+                            await updateDoc(specialsRef, { items: arrayUnion(itemToAdd) });
+                            // Re-load the selector to reflect changes
+                            loadProductSelector();
+                        };
+                    }
+                    productListDiv.appendChild(selectorDiv);
+                });
+            });
+
+            if (productListDiv.children.length === 0) {
+                productListDiv.innerHTML = '<p class="empty-message">All products are already in the special list.</p>';
+            }
+        } catch (error) {
+            console.error(error);
+            productListDiv.innerHTML = '<p class="empty-message">Failed to load products.</p>';
+        }
+    }
+
+    // Load products when modal opens
+    document.getElementById('add-special-btn').addEventListener('click', loadProductSelector);
+
+    // ---------- Categories with reorder ----------
+    const categoriesContainer = document.getElementById('categories-container');
+
+    onSnapshot(query(collection(db, "categories"), orderBy("order", "asc")), (snapshot) => {
+        categoriesContainer.innerHTML = '';
+        const docs = snapshot.docs;
+        if (docs.length === 0) {
+            categoriesContainer.innerHTML = '<div class="empty-message">No categories found.</div>';
+            return;
+        }
+
+        docs.forEach((docSnap, index) => {
+            const data = docSnap.data();
+            const id = docSnap.id;
+            const isActive = data.active !== false;
+            const orderVal = data.order ?? index; // fallback
+
+            const row = document.createElement('div');
+            row.className = 'category-row';
+            row.innerHTML = `
+                <img src="${data.image || 'https://via.placeholder.com/60?text=Cat'}" alt="${data.name}">
+                <div class="category-info">
+                    <h3>${data.name}</h3>
+                    <div class="toggle-row">
+                        <span>Active</span>
+                        <label class="toggle">
+                            <input type="checkbox" ${isActive ? 'checked' : ''} data-id="${id}">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="reorder-btns">
+                    <button class="move-up" data-id="${id}" data-order="${orderVal}" ${index === 0 ? 'disabled' : ''}>▲</button>
+                    <button class="move-down" data-id="${id}" data-order="${orderVal}" ${index === docs.length-1 ? 'disabled' : ''}>▼</button>
+                </div>
+            `;
+            categoriesContainer.appendChild(row);
+        });
+
+        // Toggle active
+        document.querySelectorAll('.toggle input[type="checkbox"]').forEach(cb => {
+            cb.onchange = (e) => {
+                const catId = e.target.dataset.id;
+                updateDoc(doc(db, "categories", catId), { active: e.target.checked });
+            };
+        });
+
+        // Reorder handlers
+        document.querySelectorAll('.move-up').forEach(btn => {
+            btn.onclick = async () => {
+                const catId = btn.dataset.id;
+                const currentOrder = parseInt(btn.dataset.order);
+                await reorderCategory(catId, currentOrder, 'up');
+            };
+        });
+        document.querySelectorAll('.move-down').forEach(btn => {
+            btn.onclick = async () => {
+                const catId = btn.dataset.id;
+                const currentOrder = parseInt(btn.dataset.order);
+                await reorderCategory(catId, currentOrder, 'down');
+            };
+        });
+    });
+
+    async function reorderCategory(catId, currentOrder, direction) {
+        const batch = writeBatch(db);
+        const qSnap = await (await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js")).getDocs(
+            query(collection(db, "categories"), orderBy("order", "asc"))
+        );
+        const docs = qSnap.docs;
+        const idx = docs.findIndex(d => d.id === catId);
+        if (idx === -1) return;
+
+        let swapIdx;
+        if (direction === 'up' && idx > 0) swapIdx = idx - 1;
+        else if (direction === 'down' && idx < docs.length - 1) swapIdx = idx + 1;
+        else return;
+
+        const docA = docs[idx];
+        const docB = docs[swapIdx];
+        const orderA = docA.data().order ?? idx;
+        const orderB = docB.data().order ?? swapIdx;
+
+        batch.update(doc(db, "categories", docA.id), { order: orderB });
+        batch.update(doc(db, "categories", docB.id), { order: orderA });
+        await batch.commit();
+    }
+</script>
+</body>
+</html>
