@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Popup Manager – SRKR Canteen</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --text-sub: #6b7280;
+            --page-bg: #f4f5f7;
+            --text-color: rgb(24, 24, 26);
+            --brand-primary: #f97316;
+            --hover-bg: #f3f4f6;
+            --border-subtle: #e5e7eb;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --danger-color: #ef4444;
+            --success-color: #10B981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--page-bg);
+            font-family: "DM Sans", Roboto, sans-serif;
+            font-weight: 500;
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* Top bar */
+        .top-bar {
+            background: #ffffff;
+            height: 80px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .top-bar h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .logout-btn:hover { color: #b91c1c; }
+
+        /* Content container */
+        .content-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px 16px;
+            width: 100%;
+            font-family: 'IBM Plex Sans', Roboto, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--text-color);
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 24px;
+        }
+        .card-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .card-body {
+            padding: 24px 20px;
+        }
+
+        /* Toggle */
+        .toggle-switch { width: 44px; height: 24px; position: relative; display: inline-block; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; inset: 0; background-color: #9CA3AF;
+            border-radius: 24px; transition: .4s; cursor: pointer;
+        }
+        .slider::before {
+            content: ""; position: absolute; height: 16px; width: 16px; left: 4px;
+            bottom: 4px; background-color: white; border-radius: 50%; transition: .4s;
+        }
+        .toggle-switch input:checked + .slider { background-color: var(--brand-primary); }
+        .toggle-switch input:checked + .slider::before { transform: translateX(20px); }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            background: white;
+            font-size: 15px;
+            color: var(--text-color);
+            font-family: inherit;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .form-input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+            outline: none;
+        }
+        textarea.form-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            color: #ffffff;
+            background: var(--brand-primary);
+            transition: background 0.2s, transform 0.2s;
+            cursor: pointer;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .primary-btn:hover { background: #ea580c; transform: translateY(-1px); }
+        .primary-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: #10B981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 9999;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast.error {
+            background: var(--danger-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-inner { padding: 16px; }
+            .card-header { padding: 16px; }
+            .card-body { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Minimal Top Bar -->
+    <header class="top-bar">
+        <h1>Popup Manager</h1>
+        <button id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </header>
+
+    <div class="content-inner">
+        <div class="card">
+            <div class="card-header">
+                <h3>⚡ Configure Promo Popup</h3>
+                <label class="toggle-switch" title="Enable/Disable Popup">
+                    <input type="checkbox" id="popup-enabled">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="card-body">
+                <!-- Image URL -->
+                <div class="form-group">
+                    <label class="form-label">Popup Image URL</label>
+                    <input type="url" id="popup-image" class="form-input" placeholder="https://example.com/image.jpg" />
+                </div>
+
+                <!-- Popup Name -->
+                <div class="form-group">
+                    <label class="form-label">Popup Name</label>
+                    <input type="text" id="popup-name" class="form-input" placeholder="Special Offer!" />
+                </div>
+
+                <!-- Popup Content -->
+                <div class="form-group">
+                    <label class="form-label">Popup Content</label>
+                    <textarea id="popup-content" class="form-input" placeholder="Enter popup message or HTML content..."></textarea>
+                </div>
+
+                <!-- Button Text -->
+                <div class="form-group">
+                    <label class="form-label">Button Text</label>
+                    <input type="text" id="popup-btn-text" class="form-input" placeholder="Order Now" />
+                </div>
+
+                <!-- Button Link -->
+                <div class="form-group">
+                    <label class="form-label">Button Link</label>
+                    <input type="url" id="popup-btn-link" class="form-input" placeholder="https://example.com" />
+                </div>
+
+                <!-- Delay (seconds) -->
+                <div class="form-group">
+                    <label class="form-label">Delay (seconds)</label>
+                    <input type="number" id="popup-delay" class="form-input" min="0" value="3" placeholder="Seconds before showing popup" />
+                </div>
+
+                <!-- Frequency -->
+                <div class="form-group">
+                    <label class="form-label">Frequency</label>
+                    <select id="popup-frequency" class="form-input">
+                        <option value="always">Always show</option>
+                        <option value="once_per_day">Once per day</option>
+                        <option value="once_per_session">Once per session</option>
+                    </select>
+                </div>
+
+                <!-- Save Button -->
+                <button id="save-btn" class="primary-btn" style="margin-top: 12px;">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // SRKR Canteen Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
+            authDomain: "srkr-canteen.firebaseapp.com",
+            projectId: "srkr-canteen",
+            storageBucket: "srkr-canteen.firebasestorage.app"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Firestore document for popup config
+        const POPUP_DOC = doc(db, 'config', 'popup');
+
+        // Auth check – redirect to login if not authenticated
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                loadPopupConfig();
+            }
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = 'index.html');
+        });
+
+        // Toast function
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${isError ? 'error' : ''} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Load existing popup configuration
+        async function loadPopupConfig() {
+            try {
+                const snap = await getDoc(POPUP_DOC);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('popup-enabled').checked = data.enabled || false;
+                    document.getElementById('popup-image').value = data.image || '';
+                    document.getElementById('popup-name').value = data.name || '';
+                    document.getElementById('popup-content').value = data.content || '';
+                    document.getElementById('popup-btn-text').value = data.buttonText || '';
+                    document.getElementById('popup-btn-link').value = data.buttonLink || '';
+                    document.getElementById('popup-delay').value = data.delay || 3;
+                    document.getElementById('popup-frequency').value = data.frequency || 'always';
+                }
+            } catch (error) {
+                console.error('Error loading popup config:', error);
+                showToast('Failed to load settings', true);
+            }
+        }
+
+        // Save configuration
+        document.getElementById('save-btn').addEventListener('click', async () => {
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            const config = {
+                enabled: document.getElementById('popup-enabled').checked,
+                image: document.getElementById('popup-image').value.trim(),
+                name: document.getElementById('popup-name').value.trim(),
+                content: document.getElementById('popup-content').value.trim(),
+                buttonText: document.getElementById('popup-btn-text').value.trim(),
+                buttonLink: document.getElementById('popup-btn-link').value.trim(),
+                delay: parseInt(document.getElementById('popup-delay').value) || 3,
+                frequency: document.getElementById('popup-frequency').value,
+                updatedAt: Date.now()
+            };
+
+            try {
+                await setDoc(POPUP_DOC, config, { merge: true });
+                showToast('Popup settings saved successfully!');
+            } catch (error) {
+                console.error('Error saving popup config:', error);
+                showToast('Failed to save settings. Please try again.', true);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Settings';
+            }
+        });
+
+        // Auto-save when toggling enabled? Optional: we can keep manual save as the primary action.
+        // But the toggle could also auto-save for better UX; we'll attach a change listener.
+        document.getElementById('popup-enabled').addEventListener('change', async () => {
+            const enabled = document.getElementById('popup-enabled').checked;
+            try {
+                await setDoc(POPUP_DOC, { enabled, updatedAt: Date.now() }, { merge: true });
+                showToast(`Popup ${enabled ? 'enabled' : 'disabled'}.`);
+            } catch (error) {
+                console.error('Error toggling popup:', error);
+                showToast('Failed to toggle popup.', true);
+            }
+        });
+    </script>
+</body>
+</html>
