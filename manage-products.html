@@ -70,7 +70,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, query, where, onSnapshot, doc, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, query, where, onSnapshot, doc, deleteDoc, updateDoc, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const app = initializeApp({
         apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
@@ -136,27 +136,13 @@
                 // 1. Delete the document from the 'products' collection
                 await deleteDoc(doc(db, "products", id));
                 
-                // 2. Remove the object from the parent category's array
+                // 2. Remove the ID from the parent category's 'relatedProducts' array
                 const categoryRef = doc(db, "categories", categoryId);
-                const categorySnap = await getDoc(categoryRef);
-                
-                if (categorySnap.exists()) {
-                    const categoryData = categorySnap.data();
-                    
-                    // Check if the array exists to avoid errors
-                    if (categoryData.relatedProducts) {
-                        // Filter out the specific product object by matching its ID
-                        const updatedProducts = categoryData.relatedProducts.filter(product => product.id !== id);
-                        
-                        // Update the category document with the filtered array
-                        await updateDoc(categoryRef, {
-                            relatedProducts: updatedProducts
-                        });
-                    }
-                }
+                await updateDoc(categoryRef, {
+                    relatedProducts: arrayRemove(id)
+                });
             } catch (err) {
                 console.error("Error deleting product:", err);
-                alert("Failed to delete the product completely. Check console for details.");
             }
         }
     };
