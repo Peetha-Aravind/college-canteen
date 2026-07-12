@@ -3,117 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Categories - SRKR Canteen</title>
+    <title>Product Details - SRKR Canteen</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --accent: #f97316; --accent-dark: #ea580c; --bg: #f8fafc; --surface: #ffffff;
-            --text: #0f172a; --text-light: #64748b; --border: #e2e8f0; --danger: #ef4444; --success: #10b981;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1); --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --text: #0f172a; --text-light: #64748b; --border: #e2e8f0;
+            --shadow-card: 0 10px 30px -10px rgba(0,0,0,0.1);
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); min-height: 100vh; }
-
-        /* Navigation */
-        nav { background: var(--surface); padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
+        
+        nav { background: var(--surface); padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .back-link { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 600; color: var(--text-light); transition: 0.2s; }
+        .back-link:hover { color: var(--text); }
         nav h1 { font-size: 1.25rem; font-weight: 700; color: var(--accent-dark); }
-        .btn-logout { background: none; border: none; color: var(--danger); font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn-logout:hover { color: #b91c1c; }
 
-        /* Main Layout */
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
-        .header-actions h2 { font-size: 1.5rem; }
+        .container { max-width: 600px; margin: 3rem auto; padding: 0 1.5rem; }
+        .form-header { margin-bottom: 2rem; text-align: center; }
+        .form-header h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+
+        .card { background: var(--surface); border-radius: 20px; padding: 2.5rem; box-shadow: var(--shadow-card); border: 1px solid var(--border); }
         
-        /* Buttons */
-        .btn-primary { background: var(--accent); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-        .btn-outline { background: white; color: var(--text); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; text-decoration: none; text-align: center;}
-        .btn-outline:hover { background: var(--bg); }
-        .btn-danger { background: white; color: var(--danger); border: 1px solid #fecaca; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn-danger:hover { background: #fef2f2; }
+        .input-group { margin-bottom: 1.5rem; }
+        .input-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text); }
+        .input-group input, .input-group textarea {
+            width: 100%; padding: 0.85rem 1rem; border: 1.5px solid var(--border); border-radius: 10px;
+            font-size: 0.95rem; background: var(--bg); transition: all 0.25s; resize: vertical;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none; border-color: var(--accent); background: var(--surface);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+        }
+        .input-help { display: block; font-size: 0.75rem; color: var(--text-light); margin-top: 0.4rem; }
 
-        /* Grid & Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .card { background: var(--surface); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: transform 0.3s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-        .card img { width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid var(--border); }
-        .card-body { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
-        .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem; }
-        .card-subtitle { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem; }
-        
-        /* Custom Toggle Switch */
-        .status-row { display: flex; justify-content: space-between; align-items: center; background: var(--bg); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; margin-top: auto; }
-        .status-row span { font-size: 0.85rem; font-weight: 600; color: var(--text-light); }
-        .toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
-        .toggle input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--success); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-
-        /* Modal */
-        .modal { display: none; position: fixed; inset: 0; z-index: 50; align-items: center; justify-content: center; }
-        .modal.active { display: flex; }
-        .modal-overlay { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); }
-        .modal-content { position: relative; background: var(--surface); width: 100%; max-width: 450px; border-radius: 16px; box-shadow: var(--shadow-md); overflow: hidden; animation: popIn 0.3s cubic-bezier(0.22,1,0.36,1); }
-        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border); font-size: 1.25rem; font-weight: 700; }
-        .modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-        
-        /* Inputs */
-        .input-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text); }
-        .input-group input { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: var(--bg); transition: 0.2s; }
-        .input-group input:focus { outline: none; border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); }
-        .modal-footer { padding: 1.5rem; background: var(--bg); display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--border); }
+        .btn-submit {
+            width: 100%; padding: 1rem; font-size: 1rem; font-weight: 600; color: white;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            border: none; border-radius: 10px; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.25); margin-top: 1rem;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(249, 115, 22, 0.35); }
     </style>
 </head>
 <body>
 
 <nav>
+    <button onclick="window.history.back()" class="back-link">← Back</button>
     <h1>SRKR Canteen</h1>
-    <button id="logout-btn" class="btn-logout">Logout</button>
 </nav>
 
 <div class="container">
-    <div class="header-actions">
-        <h2>Manage Categories</h2>
-        <button id="open-modal-btn" class="btn-primary">+ Add Category</button>
+    <div class="form-header">
+        <h2 id="form-title">Add Product</h2>
     </div>
-    <div id="categories-container" class="grid"></div>
-</div>
-
-<div id="category-modal" class="modal">
-    <div class="modal-overlay" id="modal-overlay"></div>
-    <div class="modal-content">
-        <div class="modal-header">New Category</div>
-        <form id="add-category-form">
-            <div class="modal-body">
-                <div class="input-group">
-                    <label>Category Name</label>
-                    <input type="text" id="cat-name" required placeholder="e.g. Tiffins">
-                </div>
-                <div class="input-group">
-                    <label>Image URL</label>
-                    <input type="url" id="cat-image" required placeholder="https://...">
-                </div>
+    <div class="card">
+        <form id="product-form">
+            <div class="input-group">
+                <label>Product Name</label>
+                <input type="text" id="prod-name" required placeholder="e.g. Masala Dosa">
             </div>
-            <div class="modal-footer">
-                <button type="button" id="close-modal-btn" class="btn-outline">Cancel</button>
-                <button type="submit" class="btn-primary">Save Category</button>
+            <div class="input-group">
+                <label>Description</label>
+                <textarea id="prod-desc" required rows="3" placeholder="Brief description of the item..."></textarea>
             </div>
+            <div class="input-group">
+                <label>Image URL</label>
+                <input type="url" id="prod-image" required placeholder="https://...">
+            </div>
+            <div class="input-group">
+                <label>Price (₹)</label>
+                <input type="number" id="prod-price" required min="0" step="0.01" placeholder="e.g. 45">
+            </div>
+            <div class="input-group">
+                <label>Types / Variations</label>
+                <input type="text" id="prod-types" required placeholder="e.g. Single, Full, Spicy">
+                <span class="input-help">Separate variations with commas</span>
+            </div>
+            <button type="submit" id="submit-btn" class="btn-submit">Save Product</button>
         </form>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    // Added query, where, getDocs for deep deletion
-    import { getFirestore, collection, onSnapshot, doc, deleteDoc, updateDoc, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const app = initializeApp({
         apiKey: "AIzaSyAzj2KBA8wBb1rOhA80FnZzXkMKCTlp_Es",
@@ -121,90 +95,64 @@
         projectId: "srkr-canteen",
         storageBucket: "srkr-canteen.firebasestorage.app"
     });
-    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Modal logic
-    const modal = document.getElementById('category-modal');
-    const openModal = () => modal.classList.add('active');
-    const closeModal = () => { modal.classList.remove('active'); document.getElementById('add-category-form').reset(); };
-    
-    document.getElementById('open-modal-btn').onclick = openModal;
-    document.getElementById('close-modal-btn').onclick = closeModal;
-    document.getElementById('modal-overlay').onclick = closeModal;
-    document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = 'index.html');
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryId = urlParams.get('categoryId');
+    const productId = urlParams.get('productId');
 
-    // Add Category
-    document.getElementById('add-category-form').onsubmit = async (e) => {
-        e.preventDefault();
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.innerText = "Saving..."; btn.disabled = true;
-        try {
-            await addDoc(collection(db, "categories"), { 
-                name: document.getElementById('cat-name').value, 
-                image: document.getElementById('cat-image').value, 
-                active: true,
-                relatedProducts: [] // Initialized empty array for products
-            });
-            closeModal();
-        } catch(err) { alert("Failed"); } finally { btn.innerText = "Save Category"; btn.disabled = false; }
-    };
-
-    // Load Data
-    onSnapshot(collection(db, "categories"), (snapshot) => {
-        const container = document.getElementById('categories-container');
-        container.innerHTML = '';
-        snapshot.forEach((docSnap) => {
-            const data = docSnap.data(); const id = docSnap.id;
-            const isChecked = data.active !== false ? 'checked' : '';
-            
-            // Get count of products from array
-            const productCount = data.relatedProducts ? data.relatedProducts.length : 0;
-
-            container.innerHTML += `
-                <div class="card">
-                    <img src="${data.image}" alt="${data.name}">
-                    <div class="card-body">
-                        <div class="card-title">${data.name}</div>
-                        <div class="card-subtitle">${productCount} item(s)</div>
-                        <div class="status-row">
-                            <span>Available</span>
-                            <label class="toggle">
-                                <input type="checkbox" ${isChecked} onchange="window.toggleStatus('${id}', this.checked)">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="card-actions">
-                            <a href="products.html?categoryId=${id}&categoryName=${encodeURIComponent(data.name)}" class="btn-outline">Manage</a>
-                            <button onclick="window.deleteItem('${id}')" class="btn-danger">Delete</button>
-                        </div>
-                    </div>
-                </div>`;
-        });
-    });
-
-    window.toggleStatus = (id, status) => updateDoc(doc(db, "categories", id), { active: status });
-    
-    window.deleteItem = async (id) => {
-        if(confirm("Delete this category AND all items inside it? This cannot be undone.")) {
-            try {
-                // 1. Delete all associated products in the "products" collection
-                const q = query(collection(db, "products"), where("categoryId", "==", id));
-                const querySnapshot = await getDocs(q);
-                
-                const deletePromises = [];
-                querySnapshot.forEach((productDoc) => {
-                    deletePromises.push(deleteDoc(doc(db, "products", productDoc.id)));
-                });
-                
-                await Promise.all(deletePromises);
-
-                // 2. Delete the category itself
-                await deleteDoc(doc(db, "categories", id));
-            } catch(err) {
-                console.error("Error deleting category:", err);
-                alert("Failed to delete the category completely.");
+    if (productId) {
+        document.getElementById('form-title').innerText = "Edit Product";
+        document.getElementById('submit-btn').innerText = "Update Details";
+        
+        getDoc(doc(db, "products", productId)).then(docSnap => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById('prod-name').value = data.name || '';
+                document.getElementById('prod-desc').value = data.description || '';
+                document.getElementById('prod-image').value = data.image || '';
+                document.getElementById('prod-price').value = data.price || ''; // Populates price
+                document.getElementById('prod-types').value = data.types || '';
             }
+        });
+    }
+
+    document.getElementById('product-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submit-btn');
+        btn.innerText = "Saving..."; 
+        btn.disabled = true;
+        
+        const payload = {
+            name: document.getElementById('prod-name').value,
+            description: document.getElementById('prod-desc').value,
+            image: document.getElementById('prod-image').value,
+            price: Number(document.getElementById('prod-price').value), // Converts input to a Number for Firestore
+            types: document.getElementById('prod-types').value,
+            categoryId: categoryId,
+            active: true
+        };
+
+        try {
+            if (productId) {
+                // Just update the existing product document
+                await updateDoc(doc(db, "products", productId), payload);
+            } else {
+                // 1. Add to the global 'products' collection
+                const newProductRef = await addDoc(collection(db, "products"), payload);
+                
+                // 2. Update the parent 'category' document to include this product's ID
+                const categoryRef = doc(db, "categories", categoryId);
+                await updateDoc(categoryRef, {
+                    relatedProducts: arrayUnion(newProductRef.id)
+                });
+            }
+            window.history.back(); 
+        } catch(err) { 
+            console.error(err);
+            alert("Error saving"); 
+            btn.innerText = "Save Product"; 
+            btn.disabled = false; 
         }
     };
 </script>
